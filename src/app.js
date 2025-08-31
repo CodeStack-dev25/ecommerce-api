@@ -14,6 +14,8 @@ import { __dirname } from "./path.js"
 import { addLogger, appLogger } from './utils/logger.js';
 import MongoSingleton from './config/db.js';
 
+import middlewares from "./middlewares/index.js"
+
 
 const app = express();
 
@@ -21,8 +23,6 @@ app.use(cookieParser());
 
 //PUBLIC
 app.use(express.static(__dirname + "/public"))
-
-app.use(cors());
 
 //SESSION
 app.use(session({
@@ -36,6 +36,12 @@ app.use(session({
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+
+//Middlewares
+app.use(middlewares.limit);
+app.use(...middlewares.security);
+app.use(middlewares.req)
+
 
 app.use(passport.session());
 //initPassport();
