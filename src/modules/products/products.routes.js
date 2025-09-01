@@ -1,22 +1,22 @@
-import express from "express";
-import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from "./controllers/product.controller.js";
+import Router from "express";
+import {createProduct, deleteProduct, getProduct, listProducts, updateProduct} from "./products.controller.js"
 
-import { authMiddleware, validateProduct } from "../../middlewares/index.js";
+import middlewares from "../../middlewares/index.js";
 import multer from "multer";
 
-const router = express.Router();
+const productRouter = Router();
 
 const upload = multer({ dest: "uploads/" });
 
 // Rutas públicas
-router.get("/", listProducts);
-router.get("/:id", getProduct);
+productRouter.get("/", listProducts);
+productRouter.get("/:id", getProduct);
 
 // Rutas protegidas (solo admin, por ejemplo)
-router.post(
+productRouter.post(
   "/",
-  authMiddleware,
-  validateProduct,
+  middlewares.auth,
+  middlewares.product,
   upload.fields([
     {
       name: "thumbnails",
@@ -30,7 +30,7 @@ router.post(
   createProduct
 );
 
-router.put("/:id", authMiddleware, validateProduct, updateProduct);
-router.delete("/:id", authMiddleware, deleteProduct);
+productRouter.put("/:id", middlewares.auth, middlewares.product, updateProduct);
+productRouter.delete("/:id", middlewares.auth, deleteProduct);
 
-export default router;
+export default productRouter;

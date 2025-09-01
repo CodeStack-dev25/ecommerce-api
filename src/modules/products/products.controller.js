@@ -40,9 +40,6 @@ export const createProduct = async (req, res) => {
   try {
     const { brand, title, description, basePrice, stock, category, subCategory, variants } = req.body;
 
-    // -----------------------------
-    // Subida de thumbnails a Cloudinary
-    // -----------------------------
     let thumbnails = [];
     const thumbnailFiles = req.files?.thumbnails || [];
 
@@ -53,13 +50,9 @@ export const createProduct = async (req, res) => {
       const results = await Promise.all(uploadPromises);
       thumbnails = results.map(r => ({ url: r.secure_url, public_id: r.public_id }));
 
-      // Borrar archivos locales
       await ProductService.deleteLocalFiles(thumbnailFiles.map(f => f.path));
     }
 
-    // -----------------------------
-    // Subida de imágenes de variantes
-    // -----------------------------
     let parsedVariants = [];
     const variantFiles = req.files?.variantFiles || [];
 
@@ -78,7 +71,6 @@ export const createProduct = async (req, res) => {
           const results = await Promise.all(uploadPromises);
           variantImages = results.map(r => ({ url: r.secure_url, public_id: r.public_id }));
 
-          // Borrar archivos locales
           await ProductService.deleteLocalFiles(variantFiles[i].map(f => f.path));
         }
 
@@ -92,9 +84,6 @@ export const createProduct = async (req, res) => {
       }
     }
 
-    // -----------------------------
-    // Crear producto en DB
-    // -----------------------------
     const productData = {
       brand,
       title,

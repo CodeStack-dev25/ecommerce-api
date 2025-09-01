@@ -1,10 +1,10 @@
 import express from 'express';
 import MongoStore from "connect-mongo";
 import cors from 'cors'
-//import routerIndex from './routes/index.routes.js';
-import passport from 'passport';
+import indexRouter from './routes/index.routes.js';
+//import passport from 'passport';
 import session from 'express-session'
-import cookieParser from 'cookie-parser'
+//import cookieParser from 'cookie-parser'
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
 import env from './config/env.js';
@@ -16,10 +16,9 @@ import MongoSingleton from './config/db.js';
 
 import middlewares from "./middlewares/index.js"
 
-
 const app = express();
 
-app.use(cookieParser());
+//app.use(cookieParser());
 
 //PUBLIC
 app.use(express.static(__dirname + "/public"))
@@ -43,9 +42,9 @@ app.use(...middlewares.security);
 app.use(middlewares.req)
 
 
-app.use(passport.session());
+//app.use(passport.session());
 //initPassport();
-app.use(passport.initialize());
+//app.use(passport.initialize());
 
 //Swagger Config
 
@@ -64,7 +63,7 @@ app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 app.use(addLogger);
 
-//app.use(routerIndex);
+app.use(indexRouter)
 
 async function connectMongo() {
     appLogger.info("Iniciando servicio para MongoDB");
@@ -77,6 +76,9 @@ async function connectMongo() {
 }
 
 let PORT = env.port || 8080;
+
+console.log(env);
+
 
 app.listen(PORT, () => {
     appLogger.http(`Servidor iniciado en PUERTO: ${PORT}`);
