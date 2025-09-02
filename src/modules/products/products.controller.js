@@ -23,8 +23,8 @@ export const listProducts = async (req, res) => {
 
 export const getProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const product = await ProductService.getProduct(id);
+    const { pid } = req.params;
+    const product = await ProductService.getProduct(pid);
     if (!product) {
       appLogger.error("Producto no encontrado");
       return res.status(404).json({ error: "Producto no encontrado" });
@@ -93,10 +93,9 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { pid } = req.params;
     let { variants, ...updateData } = req.body;
 
-    // Si vienen variantes, las reorganizamos en el formato de stock
     if (variants && Array.isArray(variants)) {
       updateData.stock = variants.reduce((acc, { color, size, quantity }) => {
         let existingColor = acc.find((item) => item.color === color);
@@ -114,13 +113,8 @@ export const updateProduct = async (req, res) => {
       }, []);
     }
 
-    // Manejo de imágenes (thumbnails)
     if (req.files?.thumbnails?.length) {
-      const results = await Promise.all(
-        req.files.thumbnails.map((file) =>
-          cloudinary.uploader.upload(file.path, { folder: "products" })
-        )
-      );
+      const results = await Promise.all(req.files.thumbnails.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })));
 
       updateData.thumbnails = results.map((r) => ({
         url: r.secure_url,
@@ -130,7 +124,7 @@ export const updateProduct = async (req, res) => {
       await ProductService.deleteLocalFiles(req.files.thumbnails.map((f) => f.path));
     }
 
-    const updatedProduct = await ProductService.updateProduct(id, updateData);
+    const updatedProduct = await ProductService.updateProduct(pid, updateData);
 
     if (!updatedProduct) {
       return res.status(404).json({ error: "Producto no encontrado" });
@@ -143,13 +137,12 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-
 // Eliminar un producto por ID
 
 export const deleteProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deletedProduct = await ProductService.deleteProduct(id);
+    const { pid } = req.params;
+    const deletedProduct = await ProductService.deleteProduct(pid);
     if (!deletedProduct) {
       appLogger.error("Producto no encontrado");
       return res.status(404).json({ error: "Producto no encontrado" });

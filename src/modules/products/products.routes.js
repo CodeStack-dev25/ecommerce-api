@@ -11,7 +11,7 @@ const upload = multer({ dest: "uploads/" });
 // Rutas públicas
 productRouter.get("/", listProducts);
 
-productRouter.get("/:id", getProduct);
+productRouter.get("/:pid", getProduct);
 
 // Rutas protegidas - requieren autenticación y autorización
 
@@ -27,8 +27,8 @@ productRouter.post("/",
   createProduct
 );
 
-productRouter.put("/:id", updateProduct);
+productRouter.put("/:pid", updateProduct);
 
-productRouter.delete("/:id", middlewares.auth, deleteProduct);
+productRouter.delete("/:pid", middlewares.auth, deleteProduct);
 
 export default productRouter;

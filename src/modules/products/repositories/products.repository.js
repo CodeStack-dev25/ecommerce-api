@@ -1,7 +1,6 @@
 import ProductModel from "../models/products.model.js";
 
 class ProductRepository {
-  
   // Listar todos los productos
   async getAll() {
     return ProductModel.find();
