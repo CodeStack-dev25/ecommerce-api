@@ -166,7 +166,9 @@ export const updateProductQuantityInCart = async (req, res) => {
     return res.status(200).json(updatedCart);
   } catch (err) {
     appLogger.error("Error al actualizar la cantidad del producto en el carrito", err);
-    return res.status(500).json({ error: "Error al actualizar la cantidad del producto en el carrito" });
+    return res
+      .status(500)
+      .json({ error: "Error al actualizar la cantidad del producto en el carrito" });
   }
 };
 

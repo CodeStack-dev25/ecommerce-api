@@ -63,7 +63,9 @@ export const createProduct = async (req, res) => {
     const thumbnailFiles = req.files?.thumbnails || [];
 
     if (thumbnailFiles.length > 0) {
-      const results = await Promise.all(thumbnailFiles.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })));
+      const results = await Promise.all(
+        thumbnailFiles.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })),
+      );
       thumbnails = results.map((r) => ({ url: r.secure_url, public_id: r.public_id }));
       await ProductService.deleteLocalFiles(thumbnailFiles.map((f) => f.path));
     }
@@ -114,7 +116,11 @@ export const updateProduct = async (req, res) => {
     }
 
     if (req.files?.thumbnails?.length) {
-      const results = await Promise.all(req.files.thumbnails.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })));
+      const results = await Promise.all(
+        req.files.thumbnails.map((file) =>
+          cloudinary.uploader.upload(file.path, { folder: "products" }),
+        ),
+      );
 
       updateData.thumbnails = results.map((r) => ({
         url: r.secure_url,
