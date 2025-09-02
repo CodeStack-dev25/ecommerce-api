@@ -120,11 +120,9 @@ const validateOrder = [
   },
 ];
 
-// ------------------------
-// Exportar middlewares
-// ------------------------
+
 export default{
-  req: requestLogger,
+  requestL: requestLogger,
   auth: authMiddleware,
   limit: limiter,
   error: errorHandler,

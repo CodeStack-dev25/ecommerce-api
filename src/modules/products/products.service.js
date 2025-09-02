@@ -23,9 +23,9 @@ class ProductService {
   }
 
   async deleteLocalFiles(files) {
-    return files.forEach((file) => {
+    for (const file of files) {
       fs.unlinkSync(file);
-    });
+    }
   }
 }
 

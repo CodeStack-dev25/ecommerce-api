@@ -1,87 +1,71 @@
 import ProductService from "./products.service.js";
 import { appLogger } from "../../utils/logger.js";
-import { errorResponse, successResponse } from "../../utils/helpers.js";
+import cloudinary from "../../config/cloudinary.js";
 
-// Listar todos los productos con opción de paginación
+// Listar todos los productos
+
 export const listProducts = async (req, res) => {
   try {
     const products = await ProductService.listProducts();
     if (!products || products.length === 0) {
       appLogger.error("No se encontraron productos");
-      return errorResponse(res, "No se encontraron productos", [], 404);
+      return res.status(404).json({ error: "No se encontraron productos" });
     }
     appLogger.info("Productos obtenidos correctamente");
-    return successResponse(res, products, "Productos obtenidos correctamente", 200);
+    return res.status(200).json(products);
   } catch (err) {
     appLogger.error("Error al obtener los productos", err);
-    return errorResponse(res, "Error al obtener los productos", err, 500);
+    return res.status(500).json({ error: "Error al obtener los productos" });
   }
 };
 
 // Obtener producto por ID
+
 export const getProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await ProductService.getProduct(id);
     if (!product) {
       appLogger.error("Producto no encontrado");
-      return errorResponse(res, "Producto no encontrado", [], 404);
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
     appLogger.info("Producto obtenido correctamente");
-    return successResponse(res, product, "Producto obtenido correctamente", 200);
+    return res.status(200).json(product);
   } catch (err) {
     appLogger.error("Error al obtener el producto", err);
-    return errorResponse(res, "Error al obtener el producto", err, 500);
+    return res.status(500).json({ error: "Error al obtener el producto" });
   }
 };
 
 // Crear un nuevo producto
+
 export const createProduct = async (req, res) => {
   try {
-    const { brand, title, description, basePrice, stock, category, subCategory, variants } = req.body;
+    const { brand, title, description, basePrice, category, subCategory, variants } = req.body;
+
+    // Reorganizamos variants en el formato de stock
+    const stock = variants.reduce((acc, { color, size, quantity }) => {
+      let existingColor = acc.find((item) => item.color === color);
+
+      if (existingColor) {
+        existingColor.sizes.push({ size, quantity });
+      } else {
+        acc.push({
+          color,
+          sizes: [{ size, quantity }],
+        });
+      }
+
+      return acc;
+    }, []);
 
     let thumbnails = [];
     const thumbnailFiles = req.files?.thumbnails || [];
 
     if (thumbnailFiles.length > 0) {
-      const uploadPromises = thumbnailFiles.map(file =>
-        cloudinary.uploader.upload(file.path, { folder: "products" })
-      );
-      const results = await Promise.all(uploadPromises);
-      thumbnails = results.map(r => ({ url: r.secure_url, public_id: r.public_id }));
-
-      await ProductService.deleteLocalFiles(thumbnailFiles.map(f => f.path));
-    }
-
-    let parsedVariants = [];
-    const variantFiles = req.files?.variantFiles || [];
-
-    if (variants) {
-      const variantsArray = JSON.parse(variants);
-
-      for (let i = 0; i < variantsArray.length; i++) {
-        const variant = variantsArray[i];
-        let variantImages = [];
-
-        // Asociar archivos de la variante por índice
-        if (variantFiles[i] && variantFiles[i].length > 0) {
-          const uploadPromises = variantFiles[i].map(file =>
-            cloudinary.uploader.upload(file.path, { folder: "products/variants" })
-          );
-          const results = await Promise.all(uploadPromises);
-          variantImages = results.map(r => ({ url: r.secure_url, public_id: r.public_id }));
-
-          await ProductService.deleteLocalFiles(variantFiles[i].map(f => f.path));
-        }
-
-        parsedVariants.push({
-          color: variant.color,
-          size: variant.size,
-          price: variant.price || basePrice,
-          stock: variant.stock || stock,
-          images: variantImages,
-        });
-      }
+      const results = await Promise.all(thumbnailFiles.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })));
+      thumbnails = results.map((r) => ({ url: r.secure_url, public_id: r.public_id }));
+      await ProductService.deleteLocalFiles(thumbnailFiles.map((f) => f.path));
     }
 
     const productData = {
@@ -89,55 +73,91 @@ export const createProduct = async (req, res) => {
       title,
       description,
       basePrice,
-      stock,
       category,
       subCategory,
+      stock,
       thumbnails,
-      variants: parsedVariants,
     };
 
-    const product = await ProductService.create(productData);
-    appLogger.info("Producto creado correctamente");
-    return successResponse(res, product, "Producto creado correctamente", 201);
+    const product = await ProductService.createProduct(productData);
 
+    appLogger.info("Producto creado correctamente");
+    return res.status(201).json(product);
   } catch (err) {
     appLogger.error("Error al crear el producto", err);
-    return errorResponse(res, "Error al crear el producto", err, 500);
+    return res.status(500).json({ error: "Error al crear el producto" });
   }
 };
 
-
 // Actualizar un producto por ID
+
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
-    const updatedProduct = await ProductService.updateProduct(id, updateData);
-    if (!updatedProduct) {
-      appLogger.error("Producto no encontrado");
-      return errorResponse(res, "Producto no encontrado", [], 404);
+    let { variants, ...updateData } = req.body;
+
+    // Si vienen variantes, las reorganizamos en el formato de stock
+    if (variants && Array.isArray(variants)) {
+      updateData.stock = variants.reduce((acc, { color, size, quantity }) => {
+        let existingColor = acc.find((item) => item.color === color);
+
+        if (existingColor) {
+          existingColor.sizes.push({ size, quantity });
+        } else {
+          acc.push({
+            color,
+            sizes: [{ size, quantity }],
+          });
+        }
+
+        return acc;
+      }, []);
     }
-    appLogger.info("Producto actualizado correctamente");
-    return successResponse(res, updatedProduct, "Producto actualizado correctamente", 200);
+
+    // Manejo de imágenes (thumbnails)
+    if (req.files?.thumbnails?.length) {
+      const results = await Promise.all(
+        req.files.thumbnails.map((file) =>
+          cloudinary.uploader.upload(file.path, { folder: "products" })
+        )
+      );
+
+      updateData.thumbnails = results.map((r) => ({
+        url: r.secure_url,
+        public_id: r.public_id,
+      }));
+
+      await ProductService.deleteLocalFiles(req.files.thumbnails.map((f) => f.path));
+    }
+
+    const updatedProduct = await ProductService.updateProduct(id, updateData);
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    return res.status(200).json(updatedProduct);
   } catch (err) {
     appLogger.error("Error al actualizar el producto", err);
-    return errorResponse(res, "Error al actualizar el producto", err, 500);
+    return res.status(500).json({ error: "Error al actualizar el producto" });
   }
 };
 
+
 // Eliminar un producto por ID
+
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedProduct = await ProductService.deleteProduct(id);
     if (!deletedProduct) {
       appLogger.error("Producto no encontrado");
-      return errorResponse(res, "Producto no encontrado", [], 404);
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
     appLogger.info("Producto eliminado correctamente");
-    return successResponse(res, deletedProduct, "Producto eliminado correctamente", 200);
+    return res.status(200).json({ message: "Producto eliminado correctamente" });
   } catch (err) {
     appLogger.error("Error al eliminar el producto", err);
-    return errorResponse(res, "Error al eliminar el producto", err, 500);
+    return res.status(500).json({ error: "Error al eliminar el producto" });
   }
 };

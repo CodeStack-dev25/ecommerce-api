@@ -1,25 +1,22 @@
 import { Schema, model } from "mongoose";
 
-const variantSchema = new Schema({
-  color: String,
-  size: String,
-  price: Number,
-  stock: Number,
-  images: [
-    {
-      url: String,
-      public_id: String,
-    },
-  ],
-});
-
 const productSchema = new Schema(
   {
     brand: String,
     title: { type: String, required: true },
     description: { type: String, required: true },
     basePrice: { type: Number, required: true },
-    stock: { type: Number, required: true },
+    stock: [
+      {
+        color: String,
+        sizes: [
+          {
+            size: { type: String },
+            quantity: { type: Number, default: 0 },
+          },
+        ],
+      },
+    ],
     category: { type: String, required: true },
     subCategory: String,
     thumbnails: [
@@ -28,9 +25,9 @@ const productSchema = new Schema(
         public_id: String,
       },
     ],
-    variants: [variantSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
+  { strict: false }
 );
 
 export default model("Product", productSchema);

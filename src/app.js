@@ -1,6 +1,5 @@
 import express from 'express';
 import MongoStore from "connect-mongo";
-import cors from 'cors'
 import indexRouter from './routes/index.routes.js';
 //import passport from 'passport';
 import session from 'express-session'
@@ -39,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 //Middlewares
 app.use(middlewares.limit);
 app.use(...middlewares.security);
-app.use(middlewares.req)
+app.use(middlewares.requestL)
 
 
 //app.use(passport.session());
@@ -76,8 +75,6 @@ async function connectMongo() {
 }
 
 let PORT = env.port || 8080;
-
-console.log(env);
 
 
 app.listen(PORT, () => {

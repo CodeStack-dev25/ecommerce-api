@@ -4,7 +4,7 @@ class ProductRepository {
   
   // Listar todos los productos
   async getAll() {
-    return ProductModel.find(query);
+    return ProductModel.find();
   }
 
   // Obtener producto por ID
