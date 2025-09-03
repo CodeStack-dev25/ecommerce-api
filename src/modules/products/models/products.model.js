@@ -2,23 +2,15 @@ import { Schema, model } from "mongoose";
 
 const productSchema = new Schema(
   {
-    brand: String,
+    brand: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    basePrice: { type: Number, required: true },
-    stock: [
-      {
-        color: String,
-        sizes: [
-          {
-            size: { type: String },
-            quantity: { type: Number, default: 0 },
-          },
-        ],
-      },
-    ],
     category: { type: String, required: true },
     subCategory: String,
+    color: { type: String },
+    size: { type: String },
+    price: { type: Number },
+    stock: { type: Number, default: 0 },
     thumbnails: [
       {
         url: String,
@@ -26,8 +18,7 @@ const productSchema = new Schema(
       },
     ],
   },
-  { timestamps: true },
-  { strict: false }
+  { timestamps: true, strict: false },
 );
 
-export default model("Product", productSchema);
+export default model("products", productSchema);

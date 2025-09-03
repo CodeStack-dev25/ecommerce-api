@@ -1,132 +1,137 @@
 [
   {
     "brand": "Nike",
-    "title": "Zapatillas Air Max",
-    "description": "Zapatillas deportivas con cámara de aire.",
-    "basePrice": 12000,
-    "stock": 50,
-    "category": "calzado",
-    "subCategory": "zapatillas",
-    "variants": [
-      { "color": "blanco", "size": "40,41,42", "stock": 10 },
-      { "color": "negro", "size": "39,40,41,42,43", "stock": 15 }
-    ]
-  },
-  {
-    "brand": "Adidas",
-    "title": "Remera Running",
-    "description": "Remera ligera para entrenamiento.",
-    "basePrice": 4500,
-    "stock": 100,
-    "category": "indumentaria",
-    "subCategory": "remeras",
-    "variants": [
-      { "color": "azul", "size": "S,M,L", "stock": 30 },
-      { "color": "negro", "size": "M,L,XL", "stock": 25 }
-    ]
-  },
-  {
-    "brand": "Puma",
-    "title": "Campera Rompeviento",
-    "description": "Campera liviana resistente al viento.",
-    "basePrice": 15000,
-    "stock": 40,
-    "category": "indumentaria",
-    "subCategory": "camperas",
-    "variants": [
-      { "color": "rojo", "size": "M,L,XL", "stock": 20 },
-      { "color": "negro", "size": "S,M,L", "stock": 10 }
-    ]
-  },
-  {
-    "brand": "Reebok",
-    "title": "Pantalón Jogger",
-    "description": "Pantalón deportivo con bolsillos.",
-    "basePrice": 9000,
-    "stock": 70,
-    "category": "indumentaria",
-    "subCategory": "pantalones",
-    "variants": [
-      { "color": "gris", "size": "S,M,L", "stock": 25 },
-      { "color": "negro", "size": "M,L,XL", "stock": 20 }
-    ]
-  },
-  {
-    "brand": "Under Armour",
-    "title": "Musculosa Training",
-    "description": "Musculosa transpirable para entrenar.",
-    "basePrice": 3500,
-    "stock": 80,
-    "category": "indumentaria",
-    "subCategory": "musculosas",
-    "variants": [
-      { "color": "blanco", "size": "S,M,L", "stock": 30 },
-      { "color": "azul", "size": "M,L,XL", "stock": 25 }
+    "title": "Zapatilla Air Max",
+    "description": "Zapatilla deportiva para running, cómoda y liviana",
+    "category": "Calzado",
+    "subCategory": "Running",
+    "color": "Rojo",
+    "size": "42",
+    "price": 120000,
+    "stock": 15,
+    "thumbnails": [
+      { "url": "https://example.com/images/nike_airmax_red1.jpg", "public_id": "nike_airmax_red1" },
+      { "url": "https://example.com/images/nike_airmax_red2.jpg", "public_id": "nike_airmax_red2" }
     ]
   },
   {
     "brand": "Nike",
-    "title": "Short Running",
-    "description": "Short liviano con bolsillos.",
-    "basePrice": 4000,
-    "stock": 60,
-    "category": "indumentaria",
-    "subCategory": "shorts",
-    "variants": [
-      { "color": "negro", "size": "S,M,L", "stock": 20 },
-      { "color": "azul", "size": "M,L,XL", "stock": 15 }
-    ]
-  },
-  {
-    "brand": "Adidas",
-    "title": "Buzo con Capucha",
-    "description": "Buzo de algodón con capucha.",
-    "basePrice": 11000,
-    "stock": 55,
-    "category": "indumentaria",
-    "subCategory": "buzos",
-    "variants": [
-      { "color": "gris", "size": "M,L,XL", "stock": 20 },
-      { "color": "negro", "size": "S,M,L", "stock": 15 }
-    ]
-  },
-  {
-    "brand": "Puma",
-    "title": "Zapatillas Runner",
-    "description": "Zapatillas para running con amortiguación.",
-    "basePrice": 13000,
-    "stock": 45,
-    "category": "calzado",
-    "subCategory": "zapatillas",
-    "variants": [
-      { "color": "azul", "size": "39,40,41", "stock": 15 },
-      { "color": "negro", "size": "40,41,42", "stock": 20 }
+    "title": "Zapatilla Air Max",
+    "description": "Zapatilla deportiva para running, cómoda y liviana",
+    "category": "Calzado",
+    "subCategory": "Running",
+    "color": "Azul",
+    "size": "42",
+    "price": 120000,
+    "stock": 10,
+    "thumbnails": [
+      { "url": "https://example.com/images/nike_airmax_blue1.jpg", "public_id": "nike_airmax_blue1" },
+      { "url": "https://example.com/images/nike_airmax_blue2.jpg", "public_id": "nike_airmax_blue2" }
     ]
   },
   {
     "brand": "Nike",
-    "title": "Gorra Sports",
-    "description": "Gorra ajustable de algodón.",
-    "basePrice": 2500,
-    "stock": 90,
-    "category": "accesorios",
-    "subCategory": "gorras",
-    "variants": [
-      { "color": "negro", "size": "único", "stock": 40 },
-      { "color": "rojo", "size": "único", "stock": 30 }
+    "title": "Zapatilla Air Max",
+    "description": "Zapatilla deportiva para running, cómoda y liviana",
+    "category": "Calzado",
+    "subCategory": "Running",
+    "color": "Negro",
+    "size": "43",
+    "price": 120000,
+    "stock": 8,
+    "thumbnails": [
+      { "url": "https://example.com/images/nike_airmax_black1.jpg", "public_id": "nike_airmax_black1" },
+      { "url": "https://example.com/images/nike_airmax_black2.jpg", "public_id": "nike_airmax_black2" }
+    ]
+  },
+  {
+    "brand": "Adidas",
+    "title": "Camiseta Sportswear",
+    "description": "Camiseta cómoda y transpirable para entrenamiento",
+    "category": "Ropa",
+    "subCategory": "Camisetas",
+    "color": "Negro",
+    "size": "M",
+    "price": 45000,
+    "stock": 30,
+    "thumbnails": [
+      { "url": "https://example.com/images/adidas_shirt_black1.jpg", "public_id": "adidas_shirt_black1" },
+      { "url": "https://example.com/images/adidas_shirt_black2.jpg", "public_id": "adidas_shirt_black2" }
+    ]
+  },
+  {
+    "brand": "Adidas",
+    "title": "Camiseta Sportswear",
+    "description": "Camiseta cómoda y transpirable para entrenamiento",
+    "category": "Ropa",
+    "subCategory": "Camisetas",
+    "color": "Blanco",
+    "size": "L",
+    "price": 45000,
+    "stock": 25,
+    "thumbnails": [
+      { "url": "https://example.com/images/adidas_shirt_white1.jpg", "public_id": "adidas_shirt_white1" },
+      { "url": "https://example.com/images/adidas_shirt_white2.jpg", "public_id": "adidas_shirt_white2" }
+    ]
+  },
+  {
+    "brand": "Puma",
+    "title": "Short Deportivo",
+    "description": "Short ligero para entrenamiento y deportes al aire libre",
+    "category": "Ropa",
+    "subCategory": "Shorts",
+    "color": "Gris",
+    "size": "M",
+    "price": 35000,
+    "stock": 20,
+    "thumbnails": [
+      { "url": "https://example.com/images/puma_shorts_gray1.jpg", "public_id": "puma_shorts_gray1" },
+      { "url": "https://example.com/images/puma_shorts_gray2.jpg", "public_id": "puma_shorts_gray2" }
+    ]
+  },
+  {
+    "brand": "Puma",
+    "title": "Short Deportivo",
+    "description": "Short ligero para entrenamiento y deportes al aire libre",
+    "category": "Ropa",
+    "subCategory": "Shorts",
+    "color": "Negro",
+    "size": "L",
+    "price": 35000,
+    "stock": 15,
+    "thumbnails": [
+      { "url": "https://example.com/images/puma_shorts_black1.jpg", "public_id": "puma_shorts_black1" },
+      { "url": "https://example.com/images/puma_shorts_black2.jpg", "public_id": "puma_shorts_black2" }
     ]
   },
   {
     "brand": "Reebok",
-    "title": "Bolso Deportivo",
-    "description": "Bolso mediano con compartimentos.",
-    "basePrice": 8500,
-    "stock": 35,
-    "category": "accesorios",
-    "subCategory": "bolsos",
-    "variants": [
-      { "color": "negro", "size": "único", "stock": 15 },
-      { "color": "azul", "size": "único", "stock": 10 }
+    "title": "Zapatilla Classic",
+    "description": "Zapatilla casual para uso diario",
+    "category": "Calzado",
+    "subCategory": "Casual",
+    "color": "Blanco",
+    "size": "40",
+    "price": 80000,
+    "stock": 12,
+    "thumbnails": [
+      { "url": "https://example.com/images/reebok_classic_white1.jpg", "public_id": "reebok_classic_white1" },
+      { "url": "https://example.com/images/reebok_classic_white2.jpg", "public_id": "reebok_classic_white2" }
+    ]
+  },
+  {
+    "brand": "Reebok",
+    "title": "Zapatilla Classic",
+    "description": "Zapatilla casual para uso diario",
+    "category": "Calzado",
+    "subCategory": "Casual",
+    "color": "Negro",
+    "size": "41",
+    "price": 80000,
+    "stock": 8,
+    "thumbnails": [
+      { "url": "https://example.com/images/reebok_classic_black1.jpg", "public_id": "reebok_classic_black1" },
+      { "url": "https://example.com/images/reebok_classic_black2.jpg", "public_id": "reebok_classic_black2" }
     ]
   }
 ]

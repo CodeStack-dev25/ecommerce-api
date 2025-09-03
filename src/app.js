@@ -1,6 +1,7 @@
 import express from 'express';
 import MongoStore from "connect-mongo";
 import indexRouter from './routes/index.routes.js';
+import cors from 'cors';
 //import passport from 'passport';
 import session from 'express-session'
 //import cookieParser from 'cookie-parser'
@@ -13,9 +14,10 @@ import { __dirname } from "./path.js"
 import { addLogger, appLogger } from './utils/logger.js';
 import MongoSingleton from './config/db.js';
 
-import middlewares from "./middlewares/index.js"
+// import middlewares from "./middlewares/index.js"
 
 const app = express();
+
 
 //app.use(cookieParser());
 
@@ -34,11 +36,12 @@ app.use(session({
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 //Middlewares
-app.use(middlewares.limit);
-app.use(...middlewares.security);
-app.use(middlewares.requestL)
+// app.use(middlewares.limit);
+// app.use(...middlewares.security);
+// app.use(middlewares.requestL)
 
 
 //app.use(passport.session());

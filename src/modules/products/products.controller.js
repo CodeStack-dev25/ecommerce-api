@@ -41,23 +41,12 @@ export const getProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { brand, title, description, basePrice, category, subCategory, variants } = req.body;
+    const { brand, title, description, category, subCategory, color, size, price, stock } =
+      req.body;
 
-    // Reorganizamos variants en el formato de stock
-    const stock = variants.reduce((acc, { color, size, quantity }) => {
-      let existingColor = acc.find((item) => item.color === color);
-
-      if (existingColor) {
-        existingColor.sizes.push({ size, quantity });
-      } else {
-        acc.push({
-          color,
-          sizes: [{ size, quantity }],
-        });
-      }
-
-      return acc;
-    }, []);
+    if (!brand || !title || !description || !category || !color || !size || stock == null) {
+      return res.status(400).json({ error: "Faltan campos obligatorios" });
+    }
 
     let thumbnails = [];
     const thumbnailFiles = req.files?.thumbnails || [];
@@ -74,9 +63,11 @@ export const createProduct = async (req, res) => {
       brand,
       title,
       description,
-      basePrice,
       category,
       subCategory,
+      color,
+      size,
+      price,
       stock,
       thumbnails,
     };
@@ -96,25 +87,10 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { pid } = req.params;
-    let { variants, ...updateData } = req.body;
+    const updateData = req.body;
+    console.log(updateData);
 
-    if (variants && Array.isArray(variants)) {
-      updateData.stock = variants.reduce((acc, { color, size, quantity }) => {
-        let existingColor = acc.find((item) => item.color === color);
-
-        if (existingColor) {
-          existingColor.sizes.push({ size, quantity });
-        } else {
-          acc.push({
-            color,
-            sizes: [{ size, quantity }],
-          });
-        }
-
-        return acc;
-      }, []);
-    }
-
+    // Manejo de imágenes (thumbnails)
     if (req.files?.thumbnails?.length) {
       const results = await Promise.all(
         req.files.thumbnails.map((file) =>
@@ -136,6 +112,7 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
 
+    appLogger.info("Producto actualizado correctamente");
     return res.status(200).json(updatedProduct);
   } catch (err) {
     appLogger.error("Error al actualizar el producto", err);
@@ -148,11 +125,24 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { pid } = req.params;
-    const deletedProduct = await ProductService.deleteProduct(pid);
-    if (!deletedProduct) {
+
+    // Primero obtenemos el producto para tener sus thumbnails
+    const product = await ProductService.getProduct(pid);
+    if (!product) {
       appLogger.error("Producto no encontrado");
       return res.status(404).json({ error: "Producto no encontrado" });
     }
+
+    if (product.thumbnails && product.thumbnails.length > 0) {
+      const destroyPromises = product.thumbnails.map((thumb) =>
+        cloudinary.uploader.destroy(thumb.public_id)
+      );
+      await Promise.all(destroyPromises);
+      appLogger.info("Imágenes de Cloudinary eliminadas correctamente");
+    }
+
+    await ProductService.deleteProduct(pid);
+
     appLogger.info("Producto eliminado correctamente");
     return res.status(200).json({ message: "Producto eliminado correctamente" });
   } catch (err) {

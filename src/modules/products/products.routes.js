@@ -18,6 +18,6 @@ productRouter.get("/", listProducts);
 productRouter.get("/:pid", getProduct);
 productRouter.post("/", upload.fields([{ name: "thumbnails", maxCount: 5 }]), createProduct);
 productRouter.put("/:pid", updateProduct);
-productRouter.delete("/:pid", middlewares.auth, deleteProduct);
+productRouter.delete("/:pid", deleteProduct);
 
 export default productRouter;

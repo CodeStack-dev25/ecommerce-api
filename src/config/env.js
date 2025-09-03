@@ -10,4 +10,5 @@ export default {
     cloudApiKey: process.env.CLOUD_API_KEY,
     cloudApiSecret: process.env.CLOUD_API_SECRET,
     jwtSecret: process.env.JWT_SECRET,
+    adminToken: process.env.ADMIN_TOKEN
 }
