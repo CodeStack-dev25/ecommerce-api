@@ -1,5 +1,15 @@
 import { Schema, model } from "mongoose";
 
+const variantSchema = new Schema(
+  {
+    color: { type: String },
+    size: { type: String }, 
+    price: { type: Number, required: true },
+    stock: { type: Number, default: 0 },
+  },
+  { _id: false }
+);
+
 const productSchema = new Schema(
   {
     brand: { type: String, required: true },
@@ -7,18 +17,16 @@ const productSchema = new Schema(
     description: { type: String, required: true },
     category: { type: String, required: true },
     subCategory: String,
-    color: { type: String },
-    size: { type: String },
-    price: { type: Number },
-    stock: { type: Number, default: 0 },
     thumbnails: [
       {
         url: String,
         public_id: String,
       },
-    ],
+    ], 
+    variants: [variantSchema], 
   },
-  { timestamps: true, strict: false },
+  { timestamps: true }
 );
 
 export default model("products", productSchema);
+

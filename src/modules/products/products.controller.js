@@ -41,13 +41,13 @@ export const getProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { brand, title, description, category, subCategory, color, size, price, stock } =
-      req.body;
+    const { brand, title, description, category, subCategory, variants } = req.body;
 
-    if (!brand || !title || !description || !category || !color || !size || stock == null) {
+    if (!brand || !title || !description || !category) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
+    // Manejo de imágenes
     let thumbnails = [];
     const thumbnailFiles = req.files?.thumbnails || [];
 
@@ -55,22 +55,33 @@ export const createProduct = async (req, res) => {
       const results = await Promise.all(
         thumbnailFiles.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })),
       );
-      thumbnails = results.map((r) => ({ url: r.secure_url, public_id: r.public_id }));
+      thumbnails = results.map((r) => ({
+        url: r.secure_url,
+        public_id: r.public_id,
+      }));
       await ProductService.deleteLocalFiles(thumbnailFiles.map((f) => f.path));
     }
 
+    // Construcción del producto
     const productData = {
       brand,
       title,
       description,
       category,
       subCategory,
-      color,
-      size,
-      price,
-      stock,
       thumbnails,
+      variants: [],
     };
+
+    // Si vienen variantes en el body
+    if (variants && Array.isArray(variants)) {
+      productData.variants = variants.map((v) => ({
+        color: v.color,
+        size: v.size,
+        price: v.price,
+        stock: v.stock ?? 0,
+      }));
+    }
 
     const product = await ProductService.createProduct(productData);
 
@@ -87,8 +98,7 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { pid } = req.params;
-    const updateData = req.body;
-    console.log(updateData);
+    const { variants, ...updateData } = req.body;
 
     // Manejo de imágenes (thumbnails)
     if (req.files?.thumbnails?.length) {
@@ -104,6 +114,16 @@ export const updateProduct = async (req, res) => {
       }));
 
       await ProductService.deleteLocalFiles(req.files.thumbnails.map((f) => f.path));
+    }
+
+    // Si vienen variantes en el body, las actualizamos
+    if (variants && Array.isArray(variants)) {
+      updateData.variants = variants.map((v) => ({
+        color: v.color,
+        size: v.size,
+        price: v.price,
+        stock: v.stock ?? 0,
+      }));
     }
 
     const updatedProduct = await ProductService.updateProduct(pid, updateData);
@@ -135,7 +155,7 @@ export const deleteProduct = async (req, res) => {
 
     if (product.thumbnails && product.thumbnails.length > 0) {
       const destroyPromises = product.thumbnails.map((thumb) =>
-        cloudinary.uploader.destroy(thumb.public_id)
+        cloudinary.uploader.destroy(thumb.public_id),
       );
       await Promise.all(destroyPromises);
       appLogger.info("Imágenes de Cloudinary eliminadas correctamente");
