@@ -3,18 +3,18 @@ import { Schema, model } from "mongoose";
 const variantSchema = new Schema(
   {
     color: { type: String },
-    size: { type: String }, 
-    price: { type: Number, required: true },
+    size: { type: String },
     stock: { type: Number, default: 0 },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const productSchema = new Schema(
   {
     brand: { type: String, required: true },
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String },
+    price: { type: Number, required: true },
     category: { type: String, required: true },
     subCategory: String,
     thumbnails: [
@@ -22,11 +22,10 @@ const productSchema = new Schema(
         url: String,
         public_id: String,
       },
-    ], 
-    variants: [variantSchema], 
+    ],
+    variants: [variantSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model("products", productSchema);
-

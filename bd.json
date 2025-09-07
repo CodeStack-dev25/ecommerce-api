@@ -2,106 +2,46 @@
   {
     "brand": "Nike",
     "title": "Zapatilla Air Max",
-    "description": "Zapatilla deportiva para running, cómoda y liviana",
+    "description": "Zapatilla de running con amortiguación",
     "category": "Calzado",
-    "subCategory": "Running",
-    "color": "Rojo",
-    "size": "42",
-    "price": 120000,
-    "stock": 15,
+    "subCategory": "Deportivo",
+    "price": 12000,
     "thumbnails": [
-      { "url": "https://example.com/images/nike_airmax_red1.jpg", "public_id": "nike_airmax_red1" },
-      { "url": "https://example.com/images/nike_airmax_red2.jpg", "public_id": "nike_airmax_red2" }
-    ]
-  },
-  {
-    "brand": "Nike",
-    "title": "Zapatilla Air Max",
-    "description": "Zapatilla deportiva para running, cómoda y liviana",
-    "category": "Calzado",
-    "subCategory": "Running",
-    "color": "Azul",
-    "size": "42",
-    "price": 120000,
-    "stock": 10,
-    "thumbnails": [
-      { "url": "https://example.com/images/nike_airmax_blue1.jpg", "public_id": "nike_airmax_blue1" },
-      { "url": "https://example.com/images/nike_airmax_blue2.jpg", "public_id": "nike_airmax_blue2" }
-    ]
-  },
-  {
-    "brand": "Nike",
-    "title": "Zapatilla Air Max",
-    "description": "Zapatilla deportiva para running, cómoda y liviana",
-    "category": "Calzado",
-    "subCategory": "Running",
-    "color": "Negro",
-    "size": "43",
-    "price": 120000,
-    "stock": 8,
-    "thumbnails": [
-      { "url": "https://example.com/images/nike_airmax_black1.jpg", "public_id": "nike_airmax_black1" },
-      { "url": "https://example.com/images/nike_airmax_black2.jpg", "public_id": "nike_airmax_black2" }
+      { "url": "https://via.placeholder.com/150", "public_id": "nike_airmax_1" }
+    ],
+    "variants": [
+      { "color": "Rojo", "size": "42", "stock": 5 },
+      { "color": "Negro", "size": "43", "stock": 3 }
     ]
   },
   {
     "brand": "Adidas",
-    "title": "Camiseta Sportswear",
-    "description": "Camiseta cómoda y transpirable para entrenamiento",
+    "title": "Camiseta Ultraboost",
+    "description": "Camiseta ligera para entrenamiento",
     "category": "Ropa",
-    "subCategory": "Camisetas",
-    "color": "Negro",
-    "size": "M",
-    "price": 45000,
-    "stock": 30,
+    "subCategory": "Deportivo",
+    "price": 3500,
     "thumbnails": [
-      { "url": "https://example.com/images/adidas_shirt_black1.jpg", "public_id": "adidas_shirt_black1" },
-      { "url": "https://example.com/images/adidas_shirt_black2.jpg", "public_id": "adidas_shirt_black2" }
-    ]
-  },
-  {
-    "brand": "Adidas",
-    "title": "Camiseta Sportswear",
-    "description": "Camiseta cómoda y transpirable para entrenamiento",
-    "category": "Ropa",
-    "subCategory": "Camisetas",
-    "color": "Blanco",
-    "size": "L",
-    "price": 45000,
-    "stock": 25,
-    "thumbnails": [
-      { "url": "https://example.com/images/adidas_shirt_white1.jpg", "public_id": "adidas_shirt_white1" },
-      { "url": "https://example.com/images/adidas_shirt_white2.jpg", "public_id": "adidas_shirt_white2" }
+      { "url": "https://via.placeholder.com/150", "public_id": "adidas_ultraboost_1" }
+    ],
+    "variants": [
+      { "color": "Blanco", "size": "M", "stock": 10 },
+      { "color": "Negro", "size": "L", "stock": 8 }
     ]
   },
   {
     "brand": "Puma",
-    "title": "Short Deportivo",
-    "description": "Short ligero para entrenamiento y deportes al aire libre",
+    "title": "Pantalón Jogger",
+    "description": "Pantalón cómodo para entrenamiento y casual",
     "category": "Ropa",
-    "subCategory": "Shorts",
-    "color": "Gris",
-    "size": "M",
-    "price": 35000,
-    "stock": 20,
+    "subCategory": "Casual",
+    "price": 4500,
     "thumbnails": [
-      { "url": "https://example.com/images/puma_shorts_gray1.jpg", "public_id": "puma_shorts_gray1" },
-      { "url": "https://example.com/images/puma_shorts_gray2.jpg", "public_id": "puma_shorts_gray2" }
-    ]
-  },
-  {
-    "brand": "Puma",
-    "title": "Short Deportivo",
-    "description": "Short ligero para entrenamiento y deportes al aire libre",
-    "category": "Ropa",
-    "subCategory": "Shorts",
-    "color": "Negro",
-    "size": "L",
-    "price": 35000,
-    "stock": 15,
-    "thumbnails": [
-      { "url": "https://example.com/images/puma_shorts_black1.jpg", "public_id": "puma_shorts_black1" },
-      { "url": "https://example.com/images/puma_shorts_black2.jpg", "public_id": "puma_shorts_black2" }
+      { "url": "https://via.placeholder.com/150", "public_id": "puma_jogger_1" }
+    ],
+    "variants": [
+      { "color": "Gris", "size": "M", "stock": 7 },
+      { "color": "Negro", "size": "L", "stock": 5 }
     ]
   },
   {
@@ -110,28 +50,103 @@
     "description": "Zapatilla casual para uso diario",
     "category": "Calzado",
     "subCategory": "Casual",
-    "color": "Blanco",
-    "size": "40",
-    "price": 80000,
-    "stock": 12,
+    "price": 8000,
     "thumbnails": [
-      { "url": "https://example.com/images/reebok_classic_white1.jpg", "public_id": "reebok_classic_white1" },
-      { "url": "https://example.com/images/reebok_classic_white2.jpg", "public_id": "reebok_classic_white2" }
+      { "url": "https://via.placeholder.com/150", "public_id": "reebok_classic_1" }
+    ],
+    "variants": [
+      { "color": "Blanco", "size": "40", "stock": 6 },
+      { "color": "Azul", "size": "41", "stock": 4 }
     ]
   },
   {
-    "brand": "Reebok",
-    "title": "Zapatilla Classic",
-    "description": "Zapatilla casual para uso diario",
+    "brand": "Under Armour",
+    "title": "Remera Compress",
+    "description": "Remera de compresión para entrenamiento",
+    "category": "Ropa",
+    "subCategory": "Deportivo",
+    "price": 4000,
+    "thumbnails": [
+      { "url": "https://via.placeholder.com/150", "public_id": "ua_compress_1" }
+    ],
+    "variants": [
+      { "color": "Negro", "size": "S", "stock": 12 },
+      { "color": "Gris", "size": "M", "stock": 9 }
+    ]
+  },
+  {
+    "brand": "New Balance",
+    "title": "Zapatilla 574",
+    "description": "Zapatilla clásica para uso diario",
     "category": "Calzado",
     "subCategory": "Casual",
-    "color": "Negro",
-    "size": "41",
-    "price": 80000,
-    "stock": 8,
+    "price": 9000,
     "thumbnails": [
-      { "url": "https://example.com/images/reebok_classic_black1.jpg", "public_id": "reebok_classic_black1" },
-      { "url": "https://example.com/images/reebok_classic_black2.jpg", "public_id": "reebok_classic_black2" }
+      { "url": "https://via.placeholder.com/150", "public_id": "nb_574_1" }
+    ],
+    "variants": [
+      { "color": "Gris", "size": "42", "stock": 6 },
+      { "color": "Negro", "size": "43", "stock": 5 }
+    ]
+  },
+  {
+    "brand": "Fila",
+    "title": "Short Deportivo",
+    "description": "Short cómodo para entrenamiento y deporte",
+    "category": "Ropa",
+    "subCategory": "Deportivo",
+    "price": 2500,
+    "thumbnails": [
+      { "url": "https://via.placeholder.com/150", "public_id": "fila_short_1" }
+    ],
+    "variants": [
+      { "color": "Azul", "size": "M", "stock": 15 },
+      { "color": "Negro", "size": "L", "stock": 10 }
+    ]
+  },
+  {
+    "brand": "Converse",
+    "title": "Chuck Taylor All Star",
+    "description": "Zapatilla icónica de lona",
+    "category": "Calzado",
+    "subCategory": "Casual",
+    "price": 11000,
+    "thumbnails": [
+      { "url": "https://via.placeholder.com/150", "public_id": "converse_chuck_1" }
+    ],
+    "variants": [
+      { "color": "Blanco", "size": "42", "stock": 8 },
+      { "color": "Negro", "size": "43", "stock": 6 }
+    ]
+  },
+  {
+    "brand": "Asics",
+    "title": "Gel-Kayano",
+    "description": "Zapatilla de running para largas distancias",
+    "category": "Calzado",
+    "subCategory": "Deportivo",
+    "price": 15000,
+    "thumbnails": [
+      { "url": "https://via.placeholder.com/150", "public_id": "asics_gel_1" }
+    ],
+    "variants": [
+      { "color": "Azul", "size": "42", "stock": 5 },
+      { "color": "Negro", "size": "43", "stock": 3 }
+    ]
+  },
+  {
+    "brand": "Champion",
+    "title": "Buzo Hoodie",
+    "description": "Buzo cómodo para uso diario y deporte",
+    "category": "Ropa",
+    "subCategory": "Casual",
+    "price": 7000,
+    "thumbnails": [
+      { "url": "https://via.placeholder.com/150", "public_id": "champion_hoodie_1" }
+    ],
+    "variants": [
+      { "color": "Gris", "size": "M", "stock": 7 },
+      { "color": "Negro", "size": "L", "stock": 4 }
     ]
   }
 ]
