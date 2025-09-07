@@ -1,9 +1,9 @@
 import { Routes } from "express";
-import { createSale, paymentWebhook } from "./sales.controller.js";
+import PayController from "./pay.controller";
 
 const payRoutes = Routes();
 
-payRoutes.post("/", createSale);
-payRoutes.post("/webhook", paymentWebhook);
+payRoutes.post("/", PayController.createSale);
+payRoutes.post("/webhook", PayController.paymentWebhook);
 
 export default payRoutes;

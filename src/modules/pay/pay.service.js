@@ -1,4 +1,4 @@
-import SalesRepository from "./repositories/sales.repository.js";
+import SalesRepository from "./repositories/pay.repository.js";
 import ProductsService from "../products/products.service.js";
 
 class SalesService {
@@ -18,9 +18,7 @@ class SalesService {
         const product = await ProductsService.getProduct(item.productId);
         if (!product) continue;
 
-        const variantIndex = product.variants.findIndex(
-          (v) => v.color === item.color && v.size === item.size
-        );
+        const variantIndex = product.variants.findIndex((v) => v.color === item.color && v.size === item.size);
 
         if (variantIndex !== -1) {
           product.variants[variantIndex].stock -= item.quantity;

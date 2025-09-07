@@ -1,81 +1,88 @@
-import SalesService from "./sales.service.js";
+import SalesService from "./pay.service.js";
 import { appLogger } from "../../utils/logger.js";
 import mercadopago from "mercadopago";
+import env from "../../config/env.js";
 
-// Configurar SDK
 mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN,
+  access_token: env.mpToken,
 });
 
-// Crear una nueva orden + preferencia
-export const createSale = async (req, res) => {
-  try {
-    const { user, items, total } = req.body;
+class PayController {
+  // Configurar SDK
 
-    if (!user || !items || items.length === 0) {
-      return res.status(400).json({ error: "Datos de la orden incompletos" });
+  // Crear una nueva orden + preferencia
+  async createSale(req, res) {
+    try {
+      const { user, items, total } = req.body;
+
+      if (!user || !items || items.length === 0) {
+        return res.status(400).json({ error: "Datos de la orden incompletos" });
+      }
+
+      // Creamos preferencia en MercadoPago
+      const preference = {
+        items: items.map((i) => ({
+          title: i.title,
+          unit_price: i.price,
+          quantity: i.quantity,
+        })),
+        payer: {
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+        },
+        back_urls: {
+          success: "http://localhost:3000/success",
+          failure: "http://localhost:3000/failure",
+        },
+        auto_return: "approved",
+      };
+
+      const mpResponse = await mercadopago.preferences.create(preference);
+
+      // Guardamos la venta en DB
+      const sale = await SalesService.createSale({
+        user,
+        items,
+        total,
+        preferenceId: mpResponse.body.id,
+        status: "pending",
+      });
+
+      return res.status(201).json({
+        message: "Orden creada correctamente",
+        sale,
+        init_point: mpResponse.body.init_point,
+      });
+    } catch (err) {
+      appLogger.error("Error al crear la venta", err);
+      return res.status(500).json({ error: "Error al crear la venta" });
     }
-
-    // Creamos preferencia en MercadoPago
-    const preference = {
-      items: items.map((i) => ({
-        title: i.title,
-        unit_price: i.price,
-        quantity: i.quantity,
-      })),
-      payer: {
-        name: user.name,
-        email: user.email,
-      },
-      back_urls: {
-        success: "http://localhost:3000/success",
-        failure: "http://localhost:3000/failure",
-      },
-      auto_return: "approved",
-    };
-
-    const mpResponse = await mercadopago.preferences.create(preference);
-
-    // Guardamos la venta en DB
-    const sale = await SalesService.createSale({
-      user,
-      items,
-      total,
-      preferenceId: mpResponse.body.id,
-      status: "pending",
-    });
-
-    return res.status(201).json({
-      message: "Orden creada correctamente",
-      sale,
-      init_point: mpResponse.body.init_point, // URL de pago
-    });
-  } catch (err) {
-    appLogger.error("Error al crear la venta", err);
-    return res.status(500).json({ error: "Error al crear la venta" });
   }
-};
 
-// Webhook de MercadoPago
-export const paymentWebhook = async (req, res) => {
-  try {
-    const { type, data } = req.body;
+  // Webhook de MercadoPago
+  async paymentWebhook(req, res) {
+    try {
+      const { type, data } = req.body;
 
-    if (type === "payment") {
-      const paymentId = data.id;
+      if (type === "payment") {
+        const paymentId = data.id;
 
-      // Buscar el pago en MP
-      const payment = await mercadopago.payment.findById(paymentId);
+        // Buscar el pago en MP
+        const payment = await mercadopago.payment.findById(paymentId);
 
-      const preferenceId = payment.body.order.id;
-      const status = payment.body.status;
+        const preferenceId = payment.body.order.id;
+        const status = payment.body.status;
 
-      await SalesService.updateSaleStatus(preferenceId, status, paymentId);
+        await SalesService.updateSaleStatus(preferenceId, status, paymentId);
+      }
+
+      return res.sendStatus(200);
+    } catch (err) {
+      appLogger.error("Error en webhook de pago", err);
+      return res.sendStatus(500);
     }
-
-    return res.sendStatus(200);
-  } catch (err) {
-    appLogger.error("Error en webhook de pago", err);
-    return res.sendStatus(500);
   }
-};
+}
+
+export default new PayController()

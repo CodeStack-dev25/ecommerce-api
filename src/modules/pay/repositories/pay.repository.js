@@ -1,4 +1,4 @@
-import Sale from "../sales.model.js";
+import Sale from "../models/pay.model.js";
 
 class SalesRepository {
   async create(data) {

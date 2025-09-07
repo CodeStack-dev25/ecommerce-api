@@ -19,8 +19,8 @@ const saleSchema = new Schema(
       },
     ],
     total: { type: Number, required: true },
-    preferenceId: { type: String, required: true }, // ID generado por MercadoPago/Stripe
-    paymentId: { type: String }, // ID real del pago
+    preferenceId: { type: String, required: true },
+    paymentId: { type: String },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
