@@ -8,8 +8,6 @@ mercadopago.configure({
 });
 
 class PayController {
-  // Configurar SDK
-
   // Crear una nueva orden + preferencia
   async createSale(req, res) {
     try {
