@@ -1,6 +1,7 @@
 import ProductService from "./products.service.js";
 import { appLogger } from "../../utils/logger.js";
 import cloudinary from "../../config/cloudinary.js";
+import { mapProduct } from "../../utils/helpers.js";
 
 class ProductController {
   // Listar todos los productos
@@ -8,39 +9,15 @@ class ProductController {
     try {
       const products = await ProductService.listProducts();
       if (!products || products.length === 0) {
-        appLogger.error("No se encontraron productos");
+        appLogger.error("No se encontraron Productos");
         return res.status(404).json({ error: "No se encontraron productos" });
       }
 
-      // Transformamos productos
-      const mappedProducts = products.map((product) => {
-        // agrupamos variantes por color
-        const colorMap = {};
-        product.variants.forEach((v) => {
-          if (!colorMap[v.color]) colorMap[v.color] = [];
-          colorMap[v.color].push({ name: v.size, inStock: v.stock > 0 });
-        });
-
-        const colors = Object.keys(colorMap).map((colorName) => ({
-          name: colorName,
-          sizes: colorMap[colorName],
-        }));
-
-        return {
-          _id: product._id,
-          category: product.category,
-          brand: product.brand,
-          title: product.title,
-          price: product.price,
-          thumbnails: product.thumbnails,
-          colors,
-        };
-      });
-
+      const mappedProducts = products.map(mapProduct);
       appLogger.info("Productos obtenidos correctamente");
       return res.status(200).json(mappedProducts);
     } catch (err) {
-      appLogger.error("Error al obtener los productos", err);
+      appLogger.error("Error al obtener los productos");
       return res.status(500).json({ error: "Error al obtener los productos" });
     }
   }
@@ -50,14 +27,11 @@ class ProductController {
     try {
       const { pid } = req.params;
       const product = await ProductService.getProduct(pid);
-      if (!product) {
-        appLogger.error("Producto no encontrado");
-        return res.status(404).json({ error: "Producto no encontrado" });
-      }
-      appLogger.info("Producto obtenido correctamente");
-      return res.status(200).json(product);
+      if (!product) return res.status(404).json({ error: "Producto no encontrado" });
+
+      const mappedProduct = mapProduct(product);
+      return res.status(200).json(mappedProduct);
     } catch (err) {
-      appLogger.error("Error al obtener el producto", err);
       return res.status(500).json({ error: "Error al obtener el producto" });
     }
   }
@@ -65,50 +39,46 @@ class ProductController {
   // Crear un nuevo producto
   async createProduct(req, res) {
     try {
-      const { brand, title, description, category, subCategory, price, variants } = req.body;
+      const { product } = req.body;
+      if (!product) {
+        return res.status(400).json({ error: "No se recibió el producto" });
+      }
+
+      const parsedProduct = JSON.parse(product);
+      const { brand, title, description, category, subCategory, price, variants } = parsedProduct;
 
       if (!brand || !title || !price || !category) {
         return res.status(400).json({ error: "Faltan campos obligatorios" });
       }
 
-      // Manejo de imágenes
       let thumbnails = [];
       const thumbnailFiles = req.files?.thumbnails || [];
-
       if (thumbnailFiles.length > 0) {
         const results = await Promise.all(thumbnailFiles.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })));
-        thumbnails = results.map((r) => ({
-          url: r.secure_url,
-          public_id: r.public_id,
-        }));
+        thumbnails = results.map((r) => ({ url: r.secure_url, public_id: r.public_id }));
         await ProductService.deleteLocalFiles(thumbnailFiles.map((f) => f.path));
       }
 
-      // Construcción del producto
       const productData = {
         brand,
         title,
         description,
-        price: price.toLocaleString("es-AR"),
+        price: price,
         category,
         subCategory,
         thumbnails,
-        variants: [],
+        variants: Array.isArray(variants)
+          ? variants.map((v) => ({
+              color: v.color,
+              size: v.size,
+              stock: v.stock ?? 0,
+            }))
+          : [],
       };
 
-      // Si vienen variantes en el body
-      if (variants && Array.isArray(variants)) {
-        productData.variants = variants.map((v) => ({
-          color: v.color,
-          size: v.size,
-          stock: v.stock ?? 0,
-        }));
-      }
-
-      const product = await ProductService.createProduct(productData);
-
+      const createdProduct = await ProductService.createProduct(productData);
       appLogger.info("Producto creado correctamente");
-      return res.status(201).json(product);
+      return res.status(201).json(createdProduct);
     } catch (err) {
       appLogger.error("Error al crear el producto", err);
       return res.status(500).json({ error: "Error al crear el producto" });
@@ -119,41 +89,56 @@ class ProductController {
   async updateProduct(req, res) {
     try {
       const { pid } = req.params;
-      const { variants, ...updateData } = req.body;
 
-      // Manejo de imágenes (thumbnails)
-      if (req.files?.thumbnails?.length) {
-        const results = await Promise.all(
-          req.files.thumbnails.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })),
-        );
-
-        updateData.thumbnails = results.map((r) => ({
-          url: r.secure_url,
-          public_id: r.public_id,
-        }));
-
-        await ProductService.deleteLocalFiles(req.files.thumbnails.map((f) => f.path));
-      }
-
-      // Si vienen variantes en el body, las actualizamos
-      if (variants && Array.isArray(variants)) {
-        updateData.variants = variants.map((v) => ({
-          color: v.color,
-          size: v.size,
-          stock: v.stock ?? 0,
-        }));
-      }
-
-      const updatedProduct = await ProductService.updateProduct(pid, updateData);
-
-      if (!updatedProduct) {
+      const existingProduct = await ProductService.getProduct(pid);
+      if (!existingProduct) {
         return res.status(404).json({ error: "Producto no encontrado" });
       }
 
+      let { variants, ...rest } = req.body;
+
+      if (variants && typeof variants === "string") {
+        try {
+          variants = JSON.parse(variants);
+        } catch {
+          variants = [];
+        }
+      }
+
+      // Merge variantes
+      if (Array.isArray(variants)) {
+        const mergedVariants = [...(existingProduct.variants || [])];
+
+        variants.forEach((v) => {
+          const index = mergedVariants.findIndex((ex) => ex.color === v.color && ex.size === v.size);
+
+          if (index >= 0) {
+            // Actualizamos stock de la variante existente
+            mergedVariants[index].stock += v.stock ?? mergedVariants[index].stock;
+          } else {
+            // Agregamos nueva variante
+            mergedVariants.push({
+              color: v.color,
+              size: v.size,
+              stock: v.stock ?? 0,
+            });
+          }
+        });
+
+        existingProduct.variants = mergedVariants;
+      }
+
+      // Actualizamos el resto de campos
+      Object.keys(rest).forEach((key) => {
+        existingProduct[key] = rest[key];
+      });
+
+      const updatedProduct = await existingProduct.save();
       appLogger.info("Producto actualizado correctamente");
       return res.status(200).json(updatedProduct);
     } catch (err) {
-      appLogger.error("Error al actualizar el producto", err);
+      console.error(err);
+      appLogger.error("Error al actualizar producto", err);
       return res.status(500).json({ error: "Error al actualizar el producto" });
     }
   }

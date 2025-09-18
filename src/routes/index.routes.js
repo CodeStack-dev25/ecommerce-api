@@ -7,6 +7,6 @@ const indexRoutes = Router();
 
 indexRoutes.use("/api/products", productRouter);
 indexRoutes.use("/api/users", adminRouter);
-indexRoutes.use("api/pay", payRoutes);
+indexRoutes.use("/api/pay", payRoutes);
 
 export default indexRoutes;

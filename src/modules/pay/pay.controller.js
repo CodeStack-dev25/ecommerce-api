@@ -10,20 +10,30 @@ class PayController {
   // Crear una nueva orden + preferencia
   async createSale(req, res) {
     try {
-      const { user, items, total } = req.body;
+      const { user, items } = req.body;
 
-      if (!user || !items || items.length === 0) {
-        return res.status(400).json({ error: "Datos de la orden incompletos" });
+      if (!user || !items || !items.length) {
+        return res.status(400).json({ error: "Datos incompletos" });
       }
 
-      // Creamos preferencia
+      // Validamos que cada item tenga productId, title, price y quantity
+      for (const i of items) {
+        if (!i.productId || !i.title || !i.price || !i.quantity) {
+          return res.status(400).json({ error: "Items incompletos" });
+        }
+      }
+
+      // Calculamos total
+      const total = items.reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0);
+
+      // Creamos preferencia Mercado Pago
       const preference = new Preference(mpClient);
       const mpResponse = await preference.create({
         body: {
           items: items.map((i) => ({
             title: i.title,
             unit_price: Number(i.price),
-            quantity: i.quantity,
+            quantity: Number(i.quantity),
           })),
           payer: {
             name: user.name,
@@ -31,18 +41,30 @@ class PayController {
             phone: { number: user.phone },
           },
           back_urls: {
-            success: "http://localhost:3000/success",
-            failure: "http://localhost:3000/failure",
+            success: `${env.frontURL}/success`,
+            failure: `${env.frontURL}/failure`,
           },
           auto_return: "approved",
-          external_reference: "sale-" + Date.now(), // ID único de orden
+          external_reference: "sale-" + Date.now(),
         },
       });
 
-      // Guardamos la venta en DB
+      // Guardamos venta en DB respetando el schema
       const sale = await SalesService.createSale({
-        user,
-        items,
+        user: {
+          name: user.name,
+          email: user.email,
+          phone: user.phone || "",
+          address: user.address || "",
+        },
+        items: items.map((i) => ({
+          productId: i.productId,
+          title: i.title,
+          quantity: i.quantity,
+          price: i.price,
+          color: i.color || "",
+          size: i.size || "",
+        })),
         total,
         preferenceId: mpResponse.id,
         status: "pending",
@@ -51,7 +73,7 @@ class PayController {
       return res.status(201).json({
         message: "Orden creada correctamente",
         sale,
-        init_point: mpResponse.init_point,
+        init_point: mpResponse.init_point, // link de pago Mercado Pago
       });
     } catch (err) {
       appLogger.error("Error al crear la venta", err);
@@ -79,7 +101,7 @@ class PayController {
       return res.sendStatus(200);
     } catch (err) {
       appLogger.error("Error en webhook de pago", err);
-      return res.sendStatus(200); // siempre devolver 200 a MP
+      return res.sendStatus(200);
     }
   }
 }

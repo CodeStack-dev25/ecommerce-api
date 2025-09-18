@@ -1,0 +1,1093 @@
+export const mailPayStatus = () => {
+  return `
+    <!DOCTYPE html>
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&amp;display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400..900;1,100..900&amp;display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@100;200;300;400;500;600;700;800;900"
+      rel="stylesheet"
+      type="text/css"
+    />
+    
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      a[x-apple-data-detectors] {
+        color: inherit !important;
+        text-decoration: inherit !important;
+      }
+
+      #MessageViewBody a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      p {
+        line-height: inherit;
+      }
+
+      .desktop_hide,
+      .desktop_hide table {
+        display: none;
+        max-height: 0px;
+        overflow: hidden;
+      }
+
+      .image_block img + div {
+        display: none;
+      }
+
+      sup,
+      sub {
+        font-size: 75%;
+        line-height: 0;
+      }
+
+      @media (max-width: 620px) {
+        .desktop_hide table.icons-inner,
+        .social_block.desktop_hide .social-table {
+          display: inline-block !important;
+        }
+
+        .icons-inner {
+          text-align: center;
+        }
+
+        .icons-inner td {
+          margin: 0 auto;
+        }
+
+        .mobile_hide {
+          display: none;
+        }
+
+        .row-content {
+          width: 100% !important;
+        }
+
+        .stack .column {
+          width: 100%;
+          display: block;
+        }
+
+        .mobile_hide {
+          min-height: 0;
+          max-height: 0;
+          max-width: 0;
+          overflow: hidden;
+          font-size: 0px;
+        }
+
+        .desktop_hide,
+        .desktop_hide table {
+          display: table !important;
+          max-height: none !important;
+        }
+
+        .row-2 .column-1 .block-1.spacer_block,
+        .row-3 .column-1 .block-1.spacer_block {
+          height: 40px !important;
+        }
+
+        .row-1 .column-1 .block-4.heading_block td.pad {
+          padding: 0 !important;
+        }
+
+        .row-1 .column-1 .block-4.heading_block h1 {
+          font-size: 60px !important;
+        }
+
+        .row-2 .column-1 .block-2.heading_block h2,
+        .row-2 .column-1 .block-3.paragraph_block td.pad > div,
+        .row-3 .column-1 .block-2.heading_block h2,
+        .row-3 .column-1 .block-3.paragraph_block td.pad > div {
+          text-align: left !important;
+        }
+
+        .row-1 .column-1,
+        .row-5 .column-1,
+        .row-5 .column-2 {
+          padding: 5px 15px !important;
+        }
+
+        .row-2 .column-1,
+        .row-3 .column-1 {
+          padding: 0 15px !important;
+        }
+      }
+    </style>
+
+  </head>
+
+  <body class="body" style="margin: 0; background-color: #ffffff; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none">
+    <table
+      class="nl-container"
+      width="100%"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="background-color: #ffffff"
+    >
+      <tbody>
+        <tr>
+          <td>
+            <table
+              class="row row-1"
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="background-color: #000"
+            >
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            class="column column-1"
+                            width="100%"
+                            style="
+                              font-weight: 400;
+                              text-align: left;
+                              padding-bottom: 5px;
+                              padding-left: 20px;
+                              padding-right: 20px;
+                              padding-top: 5px;
+                              vertical-align: top;
+                            "
+                          >
+                            <table
+                              class="heading_block block-1"
+                              width="100%"
+                              border="0"
+                              cellpadding="10"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad">
+                                  <h1
+                                    style="
+                                      margin: 0;
+                                      color: #ffffff;
+                                      direction: ltr;
+                                      font-family: 'Ubuntu', Tahoma, Verdana, Segoe, sans-serif;
+                                      font-size: 38px;
+                                      font-weight: 500;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: left;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">AEROTACTICO</span>
+                                  </h1>
+                                </td>
+                              </tr>
+                            </table>
+                            <div class="spacer_block block-2" style="height: 15px; line-height: 15px; font-size: 1px">&#8202;</div>
+                            <table class="image_block block-3" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                              <tr>
+                                <td class="pad" style="width: 100%">
+                                  <div class="alignment" align="center">
+                                    <div style="max-width: 93px">
+                                      <img
+                                        src="https://0adf4d719e.imgdist.com/pub/bfra/swohbaok/0j9/woo/yt6/e9d471c1-ff75-4135-92dc-e002fb33506f.png"
+                                        style="display: block; height: auto; border: 0; width: 100%"
+                                        width="93"
+                                        alt
+                                        title
+                                        height="auto"
+                                      />
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="heading_block block-4"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-right: 60px; text-align: center; width: 100%">
+                                  <h1
+                                    style="
+                                      margin: 0;
+                                      color: #ffffff;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 52px;
+                                      font-weight: 400;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: left;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word"
+                                      >Gracias por confiar en nosotros. Tu pago fue recibido</span
+                                    >
+                                  </h1>
+                                </td>
+                              </tr>
+                            </table>
+                            <div class="spacer_block block-5" style="height: 15px; line-height: 15px; font-size: 1px">&#8202;</div>
+                            <table
+                              class="paragraph_block block-6"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                              style="word-break: break-word"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; padding-top: 10px">
+                                  <div
+                                    style="
+                                      color: #ffffff;
+                                      direction: ltr;
+                                      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+                                      font-size: 16px;
+                                      font-weight: 400;
+                                      letter-spacing: 0px;
+                                      line-height: 1.8;
+                                      text-align: left;
+                                    "
+                                  >
+                                    <p style="margin: 0">
+                                      En AEROTACTICO, nos enorgullece ofrecer <strong>uniformes militares de alta calidad</strong>,
+                                      diseñados con precisión para acompañarte en cada misión. Estamos comprometidos a entregar tu pedido
+                                      con <strong>excelencia en cada detalle</strong>.
+                                    </p>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                            <div class="spacer_block block-7" style="height: 20px; line-height: 20px; font-size: 1px">&#8202;</div>
+                            <div class="spacer_block block-8" style="height: 40px; line-height: 40px; font-size: 1px">&#8202;</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="row row-2" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td class="column column-1" width="100%" style="font-weight: 400; text-align: left; vertical-align: top">
+                            <div class="spacer_block block-1" style="height: 40px; line-height: 40px; font-size: 1px">&#8202;</div>
+                            <table
+                              class="heading_block block-2"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 32px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: center;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">Hola nombre,</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="paragraph_block block-3"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                              style="word-break: break-word"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; padding-top: 10px">
+                                  <div
+                                    style="
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+                                      font-size: 16px;
+                                      font-weight: 400;
+                                      letter-spacing: 0px;
+                                      line-height: 1.8;
+                                      text-align: center;
+                                    "
+                                  >
+                                    <p style="margin: 0">Gracias por tu compra de $ monto, el fecha.</p>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="row row-3" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td class="column column-1" width="100%" style="font-weight: 400; text-align: left; vertical-align: top">
+                            <div class="spacer_block block-1" style="height: 40px; line-height: 40px; font-size: 1px">&#8202;</div>
+                            <table
+                              class="heading_block block-2"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 32px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: center;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">Detalles de tu pago</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="paragraph_block block-3"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                              style="word-break: break-word"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; padding-top: 10px">
+                                  <div
+                                    style="
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+                                      font-size: 16px;
+                                      font-weight: 400;
+                                      letter-spacing: 0px;
+                                      line-height: 1.8;
+                                      text-align: center;
+                                    "
+                                  >
+                                    <p style="margin: 0">Número de Orden: 39278830028393</p>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="row row-4" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            class="column column-1"
+                            width="100%"
+                            style="font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top"
+                          >
+                            <div class="spacer_block block-1" style="height: 20px; line-height: 20px; font-size: 1px">&#8202;</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="row row-5" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            class="column column-1"
+                            width="50%"
+                            style="font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top"
+                          >
+                            <table
+                              class="heading_block block-1"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: left;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">Importe</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="heading_block block-2"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: left;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">Fecha</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="heading_block block-3"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: left;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">Método</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="heading_block block-4"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: left;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">Confirmación</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td
+                            class="column column-2"
+                            width="50%"
+                            style="font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top"
+                          >
+                            <table
+                              class="heading_block block-1"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: right;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">$monto</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="heading_block block-2"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: right;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">fecha</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="heading_block block-3"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: right;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">tarjeta</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="heading_block block-4"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
+                                  <h2
+                                    style="
+                                      margin: 0;
+                                      color: #000;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 18px;
+                                      font-weight: 600;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: right;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">BANAMKOIS</span>
+                                  </h2>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="row row-6" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td class="column column-1" width="100%" style="font-weight: 400; text-align: left; vertical-align: top">
+                            <table class="button_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                              <tr>
+                                <td class="pad" style="padding-bottom: 10px; padding-top: 10px; text-align: center">
+                                  <div class="alignment" align="center">
+                                    <a href="www.example.com" target="_blank" style="color: #ffffff; text-decoration: none"
+                                      ><span
+                                        class="button"
+                                        style="
+                                          background-color: #000;
+                                          border-bottom: 1px solid #ffffff;
+                                          border-left: 1px solid #ffffff;
+                                          border-radius: 0px;
+                                          border-right: 1px solid #ffffff;
+                                          border-top: 1px solid #ffffff;
+                                          color: #ffffff;
+                                          display: inline-block;
+                                          font-family: 'Inter Tight', 'Arial';
+                                          font-size: 16px;
+                                          font-weight: 600;
+                                          padding-bottom: 10px;
+                                          padding-top: 10px;
+                                          padding-left: 20px;
+                                          padding-right: 20px;
+                                          text-align: center;
+                                          width: 45%;
+                                          word-break: keep-all;
+                                          letter-spacing: normal;
+                                        "
+                                        ><span style="word-break: break-word; line-height: 32px">Ver Nuestros Productos</span></span
+                                      ></a>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="row row-7" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            class="column column-1"
+                            width="100%"
+                            style="font-weight: 400; text-align: left; padding-bottom: 10px; padding-top: 10px; vertical-align: top"
+                          >
+                            <div class="spacer_block block-1" style="height: 40px; line-height: 40px; font-size: 1px">&#8202;</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              class="row row-8"
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="background-color: #000"
+            >
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            class="column column-1"
+                            width="100%"
+                            style="font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top"
+                          >
+                            <table
+                              class="heading_block block-1"
+                              width="100%"
+                              border="0"
+                              cellpadding="10"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad">
+                                  <h1
+                                    style="
+                                      margin: 0;
+                                      color: #ffffff;
+                                      direction: ltr;
+                                      font-family: 'Ubuntu', Tahoma, Verdana, Segoe, sans-serif;
+                                      font-size: 38px;
+                                      font-weight: 500;
+                                      letter-spacing: normal;
+                                      line-height: 1.2;
+                                      text-align: center;
+                                      margin-top: 0;
+                                      margin-bottom: 0;
+                                    "
+                                  >
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">AEROTACTICO</span>
+                                  </h1>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="divider_block block-2"
+                              width="100%"
+                              border="0"
+                              cellpadding="10"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad">
+                                  <div class="alignment" align="center">
+                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                      <tr>
+                                        <td class="divider_inner" style="font-size: 1px; line-height: 1px; border-top: 1px solid #f0f0f0">
+                                          <span style="word-break: break-word">&#8202;</span>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              class="row row-9"
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="background-color: #000"
+            >
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      class="row-content stack"
+                      align="center"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="border-radius: 0; color: #000000; width: 600px; margin: 0 auto"
+                      width="600"
+                    >
+                      <tbody>
+                        <tr>
+                          <td class="column column-1" width="100%" style="font-weight: 400; text-align: left; vertical-align: top">
+                            <table
+                              class="paragraph_block block-1"
+                              width="100%"
+                              border="0"
+                              cellpadding="10"
+                              cellspacing="0"
+                              role="presentation"
+                              style="word-break: break-word"
+                            >
+                              <tr>
+                                <td class="pad">
+                                  <div
+                                    style="
+                                      color: #ffffff;
+                                      direction: ltr;
+                                      font-family: 'Inter Tight', 'Arial';
+                                      font-size: 16px;
+                                      font-weight: 400;
+                                      letter-spacing: 0px;
+                                      line-height: 1.2;
+                                      text-align: center;
+                                    "
+                                  >
+                                    <p style="margin: 0; margin-bottom: 16px">2025 Aerotactico</p>
+                                    <p style="margin: 0; margin-bottom: 16px">&nbsp;Calle 12312</p>
+                                    <p style="margin: 0">Tandil, Buenos Aires</p>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              class="social_block block-2"
+                              width="100%"
+                              border="0"
+                              cellpadding="10"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tr>
+                                <td class="pad">
+                                  <div class="alignment" align="center">
+                                    <table
+                                      class="social-table"
+                                      width="72px"
+                                      border="0"
+                                      cellpadding="0"
+                                      cellspacing="0"
+                                      role="presentation"
+                                      style="display: inline-block"
+                                    >
+                                      <tr>
+                                        <td style="padding: 0 2px 0 2px">
+                                          <a href="https://www.instagram.com/" target="_blank"
+                                            ><img
+                                              src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/instagram@2x.png"
+                                              width="32"
+                                              height="auto"
+                                              alt="Instagram"
+                                              title="instagram"
+                                              style="display: block; height: auto; border: 0"
+                                          /></a>
+                                        </td>
+                                        <td style="padding: 0 2px 0 2px">
+                                          <a href target="_blank"
+                                            ><img
+                                              src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/website@2x.png"
+                                              width="32"
+                                              height="auto"
+                                              alt="Web Site"
+                                              title="Web Site"
+                                              style="display: block; height: auto; border: 0"
+                                          /></a>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>`;
+};
