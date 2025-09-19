@@ -5,12 +5,16 @@ class SalesRepository {
     return await Sale.create(data);
   }
 
+  async getSales() {
+    return await Sale.find();
+  }
+
   async getByPreferenceId(preferenceId) {
-    return await Sale.findOne({ preferenceId });
+    return await Sale.findById(preferenceId);
   }
 
   async updateStatus(preferenceId, updateData) {
-    return await Sale.findOneAndUpdate({ preferenceId }, { $set: updateData }, { new: true });
+    return await Sale.findOneAndUpdate(preferenceId, updateData, { new: true });
   }
 }
 

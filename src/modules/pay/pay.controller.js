@@ -2,6 +2,9 @@ import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
 import SalesService from "./pay.service.js";
 import { appLogger } from "../../utils/logger.js";
 import env from "../../config/env.js";
+import ProductService from "../products/products.service.js";
+import cloudinary from "../../config/cloudinary.js";
+import { sendTicket } from "../../utils/mails.js";
 
 // Configuración del cliente
 const mpClient = new MercadoPagoConfig({ accessToken: env.mpToken });
@@ -102,6 +105,91 @@ class PayController {
     } catch (err) {
       appLogger.error("Error en webhook de pago", err);
       return res.sendStatus(200);
+    }
+  }
+
+  // PayController.ts
+  async payWithTransfer(req, res) {
+    try {
+      const { user, items } = req.body;
+
+      // Si el body viene como FormData, algunos campos vienen como string, parsearlos
+      const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
+      const parsedUser = typeof user === "string" ? JSON.parse(user) : user;
+
+      // Subida a Cloudinary
+      let comprobanteUrl;
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, { folder: "tickets" });
+        comprobanteUrl = result.secure_url;
+        await ProductService.deleteLocalFiles([req.file.path]);
+      }
+
+      console.log(comprobanteUrl);
+
+      const sale = {
+        user: {
+          name: parsedUser.name,
+          email: parsedUser.email,
+          phone: parsedUser.phone || "",
+          address: parsedUser.address || "",
+          city: parsedUser.city || "",
+          postalCode: parsedUser.postalCode || "",
+        },
+        items: parsedItems.map((i) => ({
+          productId: i.productId,
+          title: i.title,
+          quantity: i.quantity,
+          price: i.price,
+          color: i.color || "",
+          size: i.size || "",
+        })),
+        total: parsedItems.reduce((acc, i) => acc + Number(i.price) * Number(i.quantity), 0),
+        status: "pending",
+        comprobanteUrl,
+      };
+
+      const newTicket = await SalesService.createSale(sale);
+      appLogger.info("Ticket creado correctamente");
+      return res.status(201).json(newTicket);
+    } catch (error) {
+      appLogger.error("Error procesando el comprobante", error);
+      return res.status(500).json(error);
+    }
+  }
+
+  async gellAllSales(req, res) {
+    try {
+      const tickets = await SalesService.getTickets();
+      appLogger.info("Comprobantes obtenidos correctamente");
+      return res.status(201).json(tickets);
+    } catch (error) {
+      appLogger.error("Error al obtener comprobantes", error);
+      return res.status(500).json(error);
+    }
+  }
+
+  async updateStatus(req, res) {
+    try {
+      const { tid } = req.params;
+      const ticket = await SalesService.getTicketById(tid);
+      if (!ticket) {
+        appLogger.error("Comprobante no encontrado");
+        return res.status(400).json("Comprobante no encontrado");
+      }else{
+        ticket.status = "approved"
+      }
+
+      
+      await SalesService.updateSaleStatus(ticket._id, ticket);
+
+      await sendTicket(ticket, "Transferencia")
+
+      appLogger.info("Comprobante actualizado");
+      return res.status(201).json(ticket);
+    } catch (error) {
+      appLogger.error("Error al actualizar comprobantes", error);
+      return res.status(500).json(error);
     }
   }
 }

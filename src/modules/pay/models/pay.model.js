@@ -7,6 +7,8 @@ const saleSchema = new Schema(
       email: { type: String, required: true },
       phone: { type: String },
       address: { type: String },
+      city: { type: String },
+      postsalCode: { type: String },
     },
     items: [
       {
@@ -19,15 +21,16 @@ const saleSchema = new Schema(
       },
     ],
     total: { type: Number, required: true },
-    preferenceId: { type: String, required: true },
+    preferenceId: { type: String},
     paymentId: { type: String },
+    comprobanteUrl: { type: String },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model("Sale", saleSchema);

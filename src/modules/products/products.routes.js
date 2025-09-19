@@ -9,7 +9,7 @@ const upload = multer({ dest: "uploads/" });
 productRouter.get("/", ProductsController.listProducts);
 productRouter.get("/:pid", ProductsController.getProduct);
 productRouter.post("/", upload.fields([{ name: "thumbnails", maxCount: 5 }]), ProductsController.createProduct);
-productRouter.put("/:pid", upload.fields([{ name: "thumbnails", maxCount: 5 }]), ProductsController.updateProduct);
+productRouter.put("/:pid", ProductsController.updateProduct);
 productRouter.delete("/:pid", ProductsController.deleteProduct);
 
 export default productRouter;

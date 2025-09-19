@@ -1,4 +1,6 @@
-export const mailPayStatus = () => {
+export const mailPayStatus = (ticket, mode) => {
+  const {user, items} = ticket
+  const date = new Date(ticket.createdAt)
   return `
     <!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
@@ -362,7 +364,7 @@ export const mailPayStatus = () => {
                                       margin-bottom: 0;
                                     "
                                   >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">Hola nombre,</span>
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">Hola ${user.name}</span>
                                   </h2>
                                 </td>
                               </tr>
@@ -390,7 +392,7 @@ export const mailPayStatus = () => {
                                       text-align: center;
                                     "
                                   >
-                                    <p style="margin: 0">Gracias por tu compra de $ monto, el fecha.</p>
+                                    <p style="margin: 0">¡Gracias por tu compra!</p>
                                   </div>
                                 </td>
                               </tr>
@@ -474,7 +476,7 @@ export const mailPayStatus = () => {
                                       text-align: center;
                                     "
                                   >
-                                    <p style="margin: 0">Número de Orden: 39278830028393</p>
+                                    <p style="margin: 0">Número de Orden: ${ticket._id}</p>
                                   </div>
                                 </td>
                               </tr>
@@ -628,36 +630,6 @@ export const mailPayStatus = () => {
                                 </td>
                               </tr>
                             </table>
-                            <table
-                              class="heading_block block-4"
-                              width="100%"
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              role="presentation"
-                            >
-                              <tr>
-                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
-                                  <h2
-                                    style="
-                                      margin: 0;
-                                      color: #000;
-                                      direction: ltr;
-                                      font-family: 'Inter Tight', 'Arial';
-                                      font-size: 18px;
-                                      font-weight: 600;
-                                      letter-spacing: normal;
-                                      line-height: 1.2;
-                                      text-align: left;
-                                      margin-top: 0;
-                                      margin-bottom: 0;
-                                    "
-                                  >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">Confirmación</span>
-                                  </h2>
-                                </td>
-                              </tr>
-                            </table>
                           </td>
                           <td
                             class="column column-2"
@@ -689,7 +661,7 @@ export const mailPayStatus = () => {
                                       margin-bottom: 0;
                                     "
                                   >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">$monto</span>
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">$ ${ticket.total.toLocaleString('es-AR')}</span>
                                   </h2>
                                 </td>
                               </tr>
@@ -719,7 +691,7 @@ export const mailPayStatus = () => {
                                       margin-bottom: 0;
                                     "
                                   >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">fecha</span>
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">${date.toLocaleDateString('es-AR')}</span>
                                   </h2>
                                 </td>
                               </tr>
@@ -749,41 +721,12 @@ export const mailPayStatus = () => {
                                       margin-bottom: 0;
                                     "
                                   >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">tarjeta</span>
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">${mode}</span>
                                   </h2>
                                 </td>
                               </tr>
                             </table>
-                            <table
-                              class="heading_block block-4"
-                              width="100%"
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              role="presentation"
-                            >
-                              <tr>
-                                <td class="pad" style="padding-bottom: 10px; text-align: center; width: 100%">
-                                  <h2
-                                    style="
-                                      margin: 0;
-                                      color: #000;
-                                      direction: ltr;
-                                      font-family: 'Inter Tight', 'Arial';
-                                      font-size: 18px;
-                                      font-weight: 600;
-                                      letter-spacing: normal;
-                                      line-height: 1.2;
-                                      text-align: right;
-                                      margin-top: 0;
-                                      margin-bottom: 0;
-                                    "
-                                  >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">BANAMKOIS</span>
-                                  </h2>
-                                </td>
-                              </tr>
-                            </table>
+
                           </td>
                         </tr>
                       </tbody>
@@ -813,7 +756,7 @@ export const mailPayStatus = () => {
                               <tr>
                                 <td class="pad" style="padding-bottom: 10px; padding-top: 10px; text-align: center">
                                   <div class="alignment" align="center">
-                                    <a href="www.example.com" target="_blank" style="color: #ffffff; text-decoration: none"
+                                    <a href="https://jl4bm6kt-3000.brs.devtunnels.ms/" target="_blank" style="color: #ffffff; text-decoration: none"
                                       ><span
                                         class="button"
                                         style="
