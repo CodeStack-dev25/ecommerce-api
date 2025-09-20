@@ -1,4 +1,57 @@
-export const mailDetailShopping = () => {
+export const mailDetailShopping = (ticket) => {
+  const { user, items } = ticket;
+
+  const desc = ticket.total * 0.2;
+  const totalConDescuento = ticket.total - desc;
+
+  const date = new Date(ticket.createdAt);
+  let item = items.map((i) => {
+    return `           
+                <table class="row row-3" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+						<tbody>
+							<tr>
+								<td>
+									<table class="row-content" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" border-radius: 0; color: #000000; width: 600px; margin: 0 auto;" width="600">
+										<tbody>
+											<tr>
+												<td class="column column-2" width="33.333333333333336%" style=" font-weight: 400; text-align: left; vertical-align: middle;">
+													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+														<tr>
+															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
+																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">${i.title}</span></h2>
+															</td>
+														</tr>
+													</table>
+													<table class="paragraph_block block-3" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" word-break: break-word;">
+														<tr>
+															<td class="pad" style="padding-bottom:5px;padding-top:5px;">
+																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left">
+																	<p style="margin: 0;">Cant: ${i.quantity}</p>
+																</div>
+															</td>
+														</tr>
+													</table>
+												</td>
+												<td class="column column-3" width="33.333333333333336%" style=" font-weight: 400; text-align: left; vertical-align: middle;">
+													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+														<tr>
+															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
+																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${i.price}</span></h2>
+															</td>
+														</tr>
+													</table>
+													<div class="spacer_block block-2" style="height:55px;line-height:55px;font-size:1px;">&#8202;</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+            `;
+  });
+
   return `<!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 
@@ -237,7 +290,7 @@ export const mailDetailShopping = () => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#000;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:1.8;text-align:center">
-																	<p style="margin: 0;">Número de Orden: 39278830028393</p>
+																	<p style="margin: 0;">Número de Orden: ${ticket._id}</p>
 																</div>
 															</td>
 														</tr>
@@ -250,69 +303,8 @@ export const mailDetailShopping = () => {
 								</td>
 							</tr>
 						</tbody>
-					</table>
-					<table class="row row-3" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" border-radius: 0; color: #000000; width: 600px; margin: 0 auto;" width="600">
-										<tbody>
-											<tr>
-												<td class="column column-1" width="33.333333333333336%" style=" font-weight: 400; text-align: left; vertical-align: middle;">
-													<table class="image_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-														<tr>
-															<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
-																<div class="alignment" align="center">
-																	<div class="fullWidth" style="max-width: 200px;"><img src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/9151/Frame_4_2.png" style="display: block; height: auto; border: 0; width: 100%;" width="200" alt title height="auto"></div>
-																</div>
-															</td>
-														</tr>
-													</table>
-												</td>
-												<td class="column column-2" width="33.333333333333336%" style=" font-weight: 400; text-align: left; vertical-align: middle;">
-													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-														<tr>
-															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">Title of Product</span></h2>
-															</td>
-														</tr>
-													</table>
-													<table class="paragraph_block block-2" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" word-break: break-word;">
-														<tr>
-															<td class="pad" style="padding-bottom:5px;padding-top:5px;">
-																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left">
-																	<p style="margin: 0;">Description</p>
-																</div>
-															</td>
-														</tr>
-													</table>
-													<table class="paragraph_block block-3" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" word-break: break-word;">
-														<tr>
-															<td class="pad" style="padding-bottom:5px;padding-top:5px;">
-																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left">
-																	<p style="margin: 0;">Quantity: 1</p>
-																</div>
-															</td>
-														</tr>
-													</table>
-												</td>
-												<td class="column column-3" width="33.333333333333336%" style=" font-weight: 400; text-align: left; vertical-align: middle;">
-													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-														<tr>
-															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$20.00</span></h2>
-															</td>
-														</tr>
-													</table>
-													<div class="spacer_block block-2" style="height:55px;line-height:55px;font-size:1px;">&#8202;</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+						</table>
+						${item}
 					<table class="row row-4" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 						<tbody>
 							<tr>
@@ -364,7 +356,9 @@ export const mailDetailShopping = () => {
 													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 														<tr>
 															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$60.00</span></h2>
+																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${ticket.total.toLocaleString(
+                                  "es-AR",
+                                )}</span></h2>
 															</td>
 														</tr>
 													</table>
@@ -399,7 +393,7 @@ export const mailDetailShopping = () => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:right;">
-																	<p style="margin: 0;">$0.00</p>
+																	<p style="margin: 0;">-20%</p>
 																</div>
 															</td>
 														</tr>
@@ -432,7 +426,9 @@ export const mailDetailShopping = () => {
 													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder" style="word-break: break-word;">$60.00</span></h2>
+																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${totalConDescuento.toLocaleString(
+                                  "es-AR",
+                                )}</span></h2>
 															</td>
 														</tr>
 													</table>
@@ -476,7 +472,7 @@ export const mailDetailShopping = () => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left;">
-																	<p style="margin: 0;">October 12, 2024</p>
+																	<p style="margin: 0;">${date.toLocaleDateString("es-AR")}</p>
 																</div>
 															</td>
 														</tr>
@@ -485,7 +481,7 @@ export const mailDetailShopping = () => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left;">
-																	<p style="margin: 0;">9:32am</p>
+																	<p style="margin: 0;">${date.toLocaleTimeString("es-AR")}</p>
 																</div>
 															</td>
 														</tr>
@@ -516,7 +512,7 @@ export const mailDetailShopping = () => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left;">
-																	<p style="margin: 0;">Michael G. Scott</p>
+																	<p style="margin: 0;">${user.name}</p>
 																</div>
 															</td>
 														</tr>
@@ -525,7 +521,7 @@ export const mailDetailShopping = () => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left;">
-																	<p style="margin: 0;">1725 Slough Ave.</p>
+																	<p style="margin: 0;">${user.address}</p>
 																</div>
 															</td>
 														</tr>
@@ -534,7 +530,16 @@ export const mailDetailShopping = () => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left;">
-																	<p style="margin: 0;">Scranton PA 18503</p>
+																	<p style="margin: 0;">${user.city}</p>
+																</div>
+															</td>
+														</tr>
+													</table>
+													<table class="paragraph_block block-5" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" word-break: break-word;">
+														<tr>
+															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
+																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left;">
+																	<p style="margin: 0;">${user.postalCode}</p>
 																</div>
 															</td>
 														</tr>
@@ -564,7 +569,7 @@ export const mailDetailShopping = () => {
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center dir="false" style="color:#ffffff;font-family:sans-serif;font-size:16px">
-<![endif]--><span class="button" style="background-color: #000; border-bottom: 1px solid #ffffff; border-left: 1px solid #ffffff; border-radius: 0px; border-right: 1px solid #ffffff; border-top: 1px solid #ffffff; color: #ffffff; display: inline-block; font-family: 'Inter Tight','Arial'; font-size: 16px; font-weight: 600; padding-bottom: 10px; padding-top: 10px; padding-left: 20px; padding-right: 20px; text-align: center; width: 45%; word-break: keep-all; letter-spacing: normal;"><span style="word-break: break-word; line-height: 32px;">Ver Nuestros Productos</span></span><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></a></div>
+<![endif]--><span class="button" style="background-color: #000; border-bottom: 1px solid #ffffff; border-left: 1px solid #ffffff; border-radius: 0px; border-right: 1px solid #ffffff; border-top: 1px solid #ffffff; color: #ffffff; display: inline-block; font-family: 'Inter Tight','Arial'; font-size: 16px; font-weight: 600; padding-bottom: 10px; padding-top: 10px; padding-left: 20px; padding-right: 20px; text-align: center; width: 100%; word-break: keep-all; letter-spacing: normal;"><span style="word-break: break-word; line-height: 32px;"></span></span><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></a></div>
 															</td>
 														</tr>
 													</table>
@@ -690,5 +695,5 @@ export const mailDetailShopping = () => {
 	</table>
 </body>
 
-</html>`
-}
+</html>`;
+};

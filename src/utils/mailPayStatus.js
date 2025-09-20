@@ -776,7 +776,7 @@ export const mailPayStatus = (ticket, mode) => {
                                           padding-left: 20px;
                                           padding-right: 20px;
                                           text-align: center;
-                                          width: 45%;
+                                          width: 100%;
                                           word-break: keep-all;
                                           letter-spacing: normal;
                                         "

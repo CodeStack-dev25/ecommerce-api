@@ -8,7 +8,7 @@ const saleSchema = new Schema(
       phone: { type: String },
       address: { type: String },
       city: { type: String },
-      postsalCode: { type: String },
+      postalCode: { type: String },
     },
     items: [
       {

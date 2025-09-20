@@ -4,7 +4,7 @@ import { appLogger } from "../../utils/logger.js";
 import env from "../../config/env.js";
 import ProductService from "../products/products.service.js";
 import cloudinary from "../../config/cloudinary.js";
-import { sendTicket } from "../../utils/mails.js";
+import { detailTicket, sendTicket } from "../../utils/mails.js";
 
 // Configuración del cliente
 const mpClient = new MercadoPagoConfig({ accessToken: env.mpToken });
@@ -112,7 +112,8 @@ class PayController {
   async payWithTransfer(req, res) {
     try {
       const { user, items } = req.body;
-
+      console.log(user);
+      
       // Si el body viene como FormData, algunos campos vienen como string, parsearlos
       const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
       const parsedUser = typeof user === "string" ? JSON.parse(user) : user;
@@ -176,14 +177,17 @@ class PayController {
       if (!ticket) {
         appLogger.error("Comprobante no encontrado");
         return res.status(400).json("Comprobante no encontrado");
-      }else{
-        ticket.status = "approved"
+      } else {
+        ticket.status = "approved";
       }
 
-      
       await SalesService.updateSaleStatus(ticket._id, ticket);
 
-      await sendTicket(ticket, "Transferencia")
+      await sendTicket(ticket, "Transferencia");
+
+      setTimeout(async () => {
+        await detailTicket(ticket);
+      }, 6000);
 
       appLogger.info("Comprobante actualizado");
       return res.status(201).json(ticket);
