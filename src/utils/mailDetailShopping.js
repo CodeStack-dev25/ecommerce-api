@@ -569,7 +569,7 @@ export const mailDetailShopping = (ticket) => {
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center dir="false" style="color:#ffffff;font-family:sans-serif;font-size:16px">
-<![endif]--><span class="button" style="background-color: #000; border-bottom: 1px solid #ffffff; border-left: 1px solid #ffffff; border-radius: 0px; border-right: 1px solid #ffffff; border-top: 1px solid #ffffff; color: #ffffff; display: inline-block; font-family: 'Inter Tight','Arial'; font-size: 16px; font-weight: 600; padding-bottom: 10px; padding-top: 10px; padding-left: 20px; padding-right: 20px; text-align: center; width: 100%; word-break: keep-all; letter-spacing: normal;"><span style="word-break: break-word; line-height: 32px;"></span></span><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></a></div>
+<![endif]--><span class="button" style="background-color: #000; border-bottom: 1px solid #ffffff; border-left: 1px solid #ffffff; border-radius: 0px; border-right: 1px solid #ffffff; border-top: 1px solid #ffffff; color: #ffffff; display: inline-block; font-family: 'Inter Tight','Arial'; font-size: 16px; font-weight: 600; padding-bottom: 10px; padding-top: 10px; padding-left: 20px; padding-right: 20px; text-align: center; width: 100%; word-break: keep-all; letter-spacing: normal;"><span style="word-break: break-word; line-height: 32px;">Ver Nuestros Productos</span></span><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></a></div>
 															</td>
 														</tr>
 													</table>
