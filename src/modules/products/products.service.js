@@ -33,6 +33,43 @@ class ProductService {
       fs.unlinkSync(file);
     }
   }
+
+  async updateStock(order) {
+    try {
+      if (!order.items || !Array.isArray(order.items)) {
+        throw new Error("El pedido no contiene items válidos");
+      }
+
+      for (const item of order.items) {
+        const prod = await this.getProduct(item.productId); // o Product.findById(item.productId)
+
+        if (!prod) {
+          throw new Error(`Producto ${item.productId} no encontrado`);
+        }
+
+        const variant = prod.variants.find((v) => v.color === item.color && v.size === item.size);
+
+        if (!variant) {
+          throw new Error(`Variante no encontrada en producto ${prod.title} (${item.color} - ${item.size})`);
+        }
+
+        if (variant.stock < item.quantity) {
+          throw new Error(`Stock insuficiente para ${prod.title} (${item.color} - ${item.size})`);
+        }
+
+        // Descontar stock
+        variant.stock -= item.quantity;
+
+        // Guardar producto actualizado
+        await prod.save();
+      }
+
+      return { success: true };
+    } catch (err) {
+      console.error("Error en updateStock:", err.message);
+      throw err;
+    }
+  }
 }
 
 export default new ProductService();

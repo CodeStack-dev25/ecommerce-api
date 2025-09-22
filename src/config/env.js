@@ -14,5 +14,6 @@ export default {
     mpToken: process.env.MP_ACCESS_TOKEN,
     adminMail: process.env.ADMIN_MAIL,
     adminPass: process.env.ADMIN_PASS,
-    frontURL: process.env.URL_FRONT
+    frontURL: process.env.URL_FRONT,
+    backURL: process.env.URL_BACK
 }

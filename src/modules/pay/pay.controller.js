@@ -13,12 +13,14 @@ class PayController {
   // Crear una nueva orden + preferencia
   async createSale(req, res) {
     try {
-      const { user, items } = req.body;
+      const { user, items, status } = req.body;
 
       if (!user || !items || !items.length) {
         return res.status(400).json({ error: "Datos incompletos" });
       }
 
+      const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
+      const parsedUser = typeof user === "string" ? JSON.parse(user) : user;
       // Validamos que cada item tenga productId, title, price y quantity
       for (const i of items) {
         if (!i.productId || !i.title || !i.price || !i.quantity) {
@@ -44,10 +46,11 @@ class PayController {
             phone: { number: user.phone },
           },
           back_urls: {
-            success: `${env.frontURL}/success`,
-            failure: `${env.frontURL}/failure`,
+            success: `${env.frontURL}/`,
+            failure: `${env.frontURL}/`,
           },
           auto_return: "approved",
+          notification_url: `${env.backURL}/api/pay/webhook`,
           external_reference: "sale-" + Date.now(),
         },
       });
@@ -55,12 +58,14 @@ class PayController {
       // Guardamos venta en DB respetando el schema
       const sale = await SalesService.createSale({
         user: {
-          name: user.name,
-          email: user.email,
-          phone: user.phone || "",
-          address: user.address || "",
+          name: parsedUser.name,
+          email: parsedUser.email,
+          phone: parsedUser.phone || "",
+          address: parsedUser.address || "",
+          city: parsedUser.city || "",
+          postalCode: parsedUser.postalCode || "",
         },
-        items: items.map((i) => ({
+        items: parsedItems.map((i) => ({
           productId: i.productId,
           title: i.title,
           quantity: i.quantity,
@@ -68,7 +73,7 @@ class PayController {
           color: i.color || "",
           size: i.size || "",
         })),
-        total,
+        total: parsedItems.reduce((acc, i) => acc + Number(i.price) * Number(i.quantity), 0),
         preferenceId: mpResponse.id,
         status: "pending",
       });
@@ -92,13 +97,14 @@ class PayController {
       if (type === "payment") {
         const paymentId = data.id;
 
+        // Traer información completa del pago
         const payment = new Payment(mpClient);
         const paymentInfo = await payment.get({ id: paymentId });
 
-        const status = paymentInfo.status;
-        const reference = paymentInfo.external_reference;
+        const status = paymentInfo.status; // approved | pending | rejected
+        const reference = paymentInfo.external_reference; // tu orderId interno
 
-        await SalesService.updateSaleStatus(reference, status, paymentId);
+        appLogger.info(`Webhook: Orden ${reference}, Estado: ${status}`);
       }
 
       return res.sendStatus(200);
@@ -112,8 +118,7 @@ class PayController {
   async payWithTransfer(req, res) {
     try {
       const { user, items } = req.body;
-      console.log(user);
-      
+
       // Si el body viene como FormData, algunos campos vienen como string, parsearlos
       const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
       const parsedUser = typeof user === "string" ? JSON.parse(user) : user;
@@ -125,8 +130,6 @@ class PayController {
         comprobanteUrl = result.secure_url;
         await ProductService.deleteLocalFiles([req.file.path]);
       }
-
-      console.log(comprobanteUrl);
 
       const sale = {
         user: {
@@ -188,6 +191,8 @@ class PayController {
       setTimeout(async () => {
         await detailTicket(ticket);
       }, 6000);
+
+      await ProductService.updateStock(ticket);
 
       appLogger.info("Comprobante actualizado");
       return res.status(201).json(ticket);

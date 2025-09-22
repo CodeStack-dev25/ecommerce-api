@@ -94,7 +94,7 @@ class ProductController {
       if (!existingProduct) {
         return res.status(404).json({ error: "Producto no encontrado" });
       }
-
+      
       let { variants, ...rest } = req.body;
 
       if (variants && typeof variants === "string") {
