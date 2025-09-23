@@ -28,6 +28,6 @@ export const mapProduct = (product) => {
     description: product.description,
     price: product.price,
     thumbnails: product.thumbnails,
-    colors,
+    variants: colors,
   };
 };
