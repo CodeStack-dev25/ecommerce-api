@@ -55,15 +55,12 @@ class ProductController {
   // Crear un nuevo producto
   async createProduct(req, res) {
     try {
-      const { product } = req.body;
-      if (!product) {
-        return res.status(400).json({ error: "No se recibió el producto" });
-      }
+      const productData = req.body; // directamente objeto
+      if (!productData) return res.status(400).json({ error: "No se recibió el producto" });
 
-      const parsedProduct = JSON.parse(product);
-      const { brand, title, description, category, subCategory, price, variants } = parsedProduct;
+      const { brand = "", title, description = "", category, subCategory = "", price, variants = [] } = productData;
 
-      if (!brand || !title || !price || !category) {
+      if (!title || !price || !category) {
         return res.status(400).json({ error: "Faltan campos obligatorios" });
       }
 
@@ -75,106 +72,109 @@ class ProductController {
         await ProductService.deleteLocalFiles(thumbnailFiles.map((f) => f.path));
       }
 
-      const productData = {
+      // Expandir variantes con sizes[]
+      const flatVariants = Array.isArray(variants)
+        ? variants.flatMap(
+            (v) =>
+              v.sizes?.map((s) => ({
+                color: v.name,
+                rgb: v.rgb,
+                size: s.name,
+                stock: s.stock ?? 0,
+              })) || [],
+          )
+        : [];
+
+      const createdProduct = await ProductService.createProduct({
         brand,
         title,
         description,
-        price: price,
+        price,
         category,
         subCategory,
         thumbnails,
-        variants: Array.isArray(variants)
-          ? variants.map((v) => ({
-              color: v.color,
-              size: v.size,
-              stock: v.stock ?? 0,
-            }))
-          : [],
-      };
+        variants: flatVariants,
+      });
 
-      const createdProduct = await ProductService.createProduct(productData);
       appLogger.info("Producto creado correctamente");
       return res.status(201).json(createdProduct);
     } catch (err) {
+      console.error(err);
       appLogger.error("Error al crear el producto", err);
       return res.status(500).json({ error: "Error al crear el producto" });
     }
   }
-
   // Actualizar un producto por ID
-async updateProduct(req, res) {
-  try {
-    const { pid } = req.params;
+  async updateProduct(req, res) {
+    try {
+      const { pid } = req.params;
 
-    // 1️⃣ Obtener producto existente
-    const existingProduct = await ProductService.getProduct(pid);
-    if (!existingProduct) {
-      return res.status(404).json({ error: "Producto no encontrado" });
-    }
-
-    let { variants, ...rest } = req.body;
-
-    console.log(req.body);
-    
-
-    // 2️⃣ Si variants viene como string, parsearlo
-    if (variants && typeof variants === "string") {
-      try {
-        variants = JSON.parse(variants);
-      } catch {
-        variants = [];
+      // 1️⃣ Obtener producto existente
+      const existingProduct = await ProductService.getProduct(pid);
+      if (!existingProduct) {
+        return res.status(404).json({ error: "Producto no encontrado" });
       }
-    }
 
-    // 3️⃣ Merge variantes existentes
-    if (Array.isArray(variants)) {
-      const mergedVariants = [...(existingProduct.variants || [])];
+      let { variants, ...rest } = req.body;
 
-      variants.forEach((v) => {
-        if (!v.color || !v.size) return; // ignorar variantes inválidas
+      // 2️⃣ Parsear si viene como string
+      if (variants && typeof variants === "string") {
+        try {
+          variants = JSON.parse(variants);
+        } catch {
+          variants = [];
+        }
+      }
 
-        const index = mergedVariants.findIndex(
-          (ex) => ex.color === v.color && ex.size === v.size
-        );
+      // 3️⃣ Transformar variantes { name, rgb, sizes[] } en array plano
+      if (Array.isArray(variants)) {
+        const mergedVariants = [];
 
-        if (index >= 0) {
-          // Actualizamos stock existente
-          mergedVariants[index].stock += v.stock ?? 0;
-        } else {
-          // Agregamos nueva variante
-          mergedVariants.push({
-            color: v.color,
-            size: v.size,
-            stock: v.stock ?? 0,
+        variants.forEach((variant) => {
+          const { name, rgb, sizes } = variant;
+
+          if (!sizes || !Array.isArray(sizes)) return;
+
+          sizes.forEach((s) => {
+            if (!s.name) return;
+
+            const index = mergedVariants.findIndex((ex) => ex.color === name && ex.size === s.name);
+
+            if (index >= 0) {
+              // 🔄 Actualizamos stock
+              mergedVariants[index].stock += s.stock;
+            } else {
+              // ➕ Nueva variante
+              mergedVariants.push({
+                color: name,
+                rgb,
+                size: s.name,
+                stock: s.stock ?? 0,
+              });
+            }
           });
+        });
+
+        existingProduct.variants = mergedVariants;
+      }
+
+      // 4️⃣ Actualizar el resto de los campos del producto
+      Object.keys(rest).forEach((key) => {
+        if (rest[key] !== undefined) {
+          existingProduct[key] = rest[key];
         }
       });
 
-      // 4️⃣ Filtrar variantes inválidas (por si quedara alguna)
-      existingProduct.variants = mergedVariants.filter(
-        (v) => v.color && v.size
-      );
+      // 5️⃣ Guardar y devolver producto actualizado
+      const updatedProduct = await existingProduct.save();
+      appLogger.info("Producto actualizado correctamente");
+      return res.status(200).json(updatedProduct);
+    } catch (err) {
+      console.error(err);
+      appLogger.error("Error al actualizar producto", err);
+      return res.status(500).json({ error: "Error al actualizar el producto" });
     }
-
-    // 5️⃣ Actualizar otros campos del producto
-    Object.keys(rest).forEach((key) => {
-      if (rest[key] !== undefined) {
-        existingProduct[key] = rest[key];
-      }
-    });
-
-    // 6️⃣ Guardar y devolver producto actualizado
-    const updatedProduct = await existingProduct.save();
-    appLogger.info("Producto actualizado correctamente");
-    return res.status(200).json(updatedProduct);
-
-  } catch (err) {
-    console.error(err);
-    appLogger.error("Error al actualizar producto", err);
-    return res.status(500).json({ error: "Error al actualizar el producto" });
   }
-}
-
 
   // Eliminar un producto por ID
   async deleteProduct(req, res) {
