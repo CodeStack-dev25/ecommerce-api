@@ -7,13 +7,29 @@ class ProductController {
   // Listar todos los productos
   async listProducts(req, res) {
     try {
-      const products = await ProductService.listProducts();
+      // Tomamos los filtros desde query params
+      const { category, title } = req.query;
+
+      // Obtenemos todos los productos
+      let products = await ProductService.listProducts();
+
       if (!products || products.length === 0) {
-        appLogger.error("No se encontraron Productos");
+        appLogger.error("No se encontraron productos");
         return res.status(404).json({ error: "No se encontraron productos" });
       }
 
+      // Filtrar por categoría si existe
+      if (category) {
+        products = products.filter((p) => p.category.toLowerCase() === category.toLowerCase());
+      }
+
+      // Filtrar por nombre si existe
+      if (title) {
+        products = products.filter((p) => p.title.toLowerCase().includes(title.toLowerCase()));
+      }
+
       const mappedProducts = products.map(mapProduct);
+
       appLogger.info("Productos obtenidos correctamente");
       return res.status(200).json(mappedProducts);
     } catch (err) {
@@ -86,62 +102,79 @@ class ProductController {
   }
 
   // Actualizar un producto por ID
-  async updateProduct(req, res) {
-    try {
-      const { pid } = req.params;
+async updateProduct(req, res) {
+  try {
+    const { pid } = req.params;
 
-      const existingProduct = await ProductService.getProduct(pid);
-      if (!existingProduct) {
-        return res.status(404).json({ error: "Producto no encontrado" });
+    // 1️⃣ Obtener producto existente
+    const existingProduct = await ProductService.getProduct(pid);
+    if (!existingProduct) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    let { variants, ...rest } = req.body;
+
+    console.log(req.body);
+    
+
+    // 2️⃣ Si variants viene como string, parsearlo
+    if (variants && typeof variants === "string") {
+      try {
+        variants = JSON.parse(variants);
+      } catch {
+        variants = [];
       }
-      
-      let { variants, ...rest } = req.body;
+    }
 
-      if (variants && typeof variants === "string") {
-        try {
-          variants = JSON.parse(variants);
-        } catch {
-          variants = [];
+    // 3️⃣ Merge variantes existentes
+    if (Array.isArray(variants)) {
+      const mergedVariants = [...(existingProduct.variants || [])];
+
+      variants.forEach((v) => {
+        if (!v.color || !v.size) return; // ignorar variantes inválidas
+
+        const index = mergedVariants.findIndex(
+          (ex) => ex.color === v.color && ex.size === v.size
+        );
+
+        if (index >= 0) {
+          // Actualizamos stock existente
+          mergedVariants[index].stock += v.stock ?? 0;
+        } else {
+          // Agregamos nueva variante
+          mergedVariants.push({
+            color: v.color,
+            size: v.size,
+            stock: v.stock ?? 0,
+          });
         }
-      }
-
-      // Merge variantes
-      if (Array.isArray(variants)) {
-        const mergedVariants = [...(existingProduct.variants || [])];
-
-        variants.forEach((v) => {
-          const index = mergedVariants.findIndex((ex) => ex.color === v.color && ex.size === v.size);
-
-          if (index >= 0) {
-            // Actualizamos stock de la variante existente
-            mergedVariants[index].stock += v.stock ?? mergedVariants[index].stock;
-          } else {
-            // Agregamos nueva variante
-            mergedVariants.push({
-              color: v.color,
-              size: v.size,
-              stock: v.stock ?? 0,
-            });
-          }
-        });
-
-        existingProduct.variants = mergedVariants;
-      }
-
-      // Actualizamos el resto de campos
-      Object.keys(rest).forEach((key) => {
-        existingProduct[key] = rest[key];
       });
 
-      const updatedProduct = await existingProduct.save();
-      appLogger.info("Producto actualizado correctamente");
-      return res.status(200).json(updatedProduct);
-    } catch (err) {
-      console.error(err);
-      appLogger.error("Error al actualizar producto", err);
-      return res.status(500).json({ error: "Error al actualizar el producto" });
+      // 4️⃣ Filtrar variantes inválidas (por si quedara alguna)
+      existingProduct.variants = mergedVariants.filter(
+        (v) => v.color && v.size
+      );
     }
+
+    // 5️⃣ Actualizar otros campos del producto
+    Object.keys(rest).forEach((key) => {
+      if (rest[key] !== undefined) {
+        existingProduct[key] = rest[key];
+      }
+    });
+
+    // 6️⃣ Guardar y devolver producto actualizado
+    const updatedProduct = await existingProduct.save();
+    appLogger.info("Producto actualizado correctamente");
+    return res.status(200).json(updatedProduct);
+
+  } catch (err) {
+    console.error(err);
+    appLogger.error("Error al actualizar producto", err);
+    return res.status(500).json({ error: "Error al actualizar el producto" });
   }
+}
+
 
   // Eliminar un producto por ID
   async deleteProduct(req, res) {
