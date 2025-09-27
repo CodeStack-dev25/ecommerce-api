@@ -4,13 +4,12 @@ import { appLogger } from "../../utils/logger.js";
 import env from "../../config/env.js";
 import ProductService from "../products/products.service.js";
 import cloudinary from "../../config/cloudinary.js";
-import { detailTicket, sendTicket } from "../../utils/mails.js";
+import { adminTicket, detailTicket, sendTicket } from "../../utils/mails.js";
 
-// Configuración del cliente
 const mpClient = new MercadoPagoConfig({ accessToken: env.mpToken });
 
 class PayController {
-  // Crear una nueva orden + preferencia
+  // Crear una nueva orden 
   async createSale(req, res) {
     try {
       const { user, items, status } = req.body;
@@ -28,7 +27,6 @@ class PayController {
         }
       }
 
-      // Calculamos total
       const total = items.reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0);
 
       // Creamos preferencia Mercado Pago
@@ -81,7 +79,7 @@ class PayController {
       return res.status(201).json({
         message: "Orden creada correctamente",
         sale,
-        init_point: mpResponse.init_point, // link de pago Mercado Pago
+        init_point: mpResponse.init_point,
       });
     } catch (err) {
       appLogger.error("Error al crear la venta", err);
@@ -101,8 +99,8 @@ class PayController {
         const payment = new Payment(mpClient);
         const paymentInfo = await payment.get({ id: paymentId });
 
-        const status = paymentInfo.status; // approved | pending | rejected
-        const reference = paymentInfo.external_reference; // tu orderId interno
+        const status = paymentInfo.status;
+        const reference = paymentInfo.external_reference;
 
         appLogger.info(`Webhook: Orden ${reference}, Estado: ${status}`);
       }
@@ -114,12 +112,11 @@ class PayController {
     }
   }
 
-  // PayController.ts
+  //PayController
   async payWithTransfer(req, res) {
     try {
       const { user, items } = req.body;
 
-      // Si el body viene como FormData, algunos campos vienen como string, parsearlos
       const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
       const parsedUser = typeof user === "string" ? JSON.parse(user) : user;
 
@@ -185,12 +182,20 @@ class PayController {
       }
 
       await SalesService.updateSaleStatus(ticket._id, ticket);
+      
+      let mode;
 
-      await sendTicket(ticket, "Transferencia");
+      if(ticket.comprobanteUrl){
+        mode = 'Transferencia'
+      }else{
+        mode = 'Mercado Pago'
+      }
 
-      setTimeout(async () => {
-        await detailTicket(ticket);
-      }, 6000);
+      await sendTicket(ticket, mode);
+
+      await detailTicket(ticket, mode)
+
+      await adminTicket(ticket, mode)
 
       await ProductService.updateStock(ticket);
 

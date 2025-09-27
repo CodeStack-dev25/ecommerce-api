@@ -1,5 +1,5 @@
-export const mailDetailShopping = (ticket) => {
-  const { user, items } = ticket;
+export const mailDetailShopping = (ticket, mode) => {
+  const { user, items, total } = ticket;
 
   const desc = ticket.total * 0.2;
   const totalConDescuento = ticket.total - desc;
@@ -7,48 +7,44 @@ export const mailDetailShopping = (ticket) => {
   const date = new Date(ticket.createdAt);
   let item = items.map((i) => {
     return `           
-                <table class="row row-3" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" border-radius: 0; color: #000000; width: 600px; margin: 0 auto;" width="600">
-										<tbody>
-											<tr>
-												<td class="column column-2" width="33.333333333333336%" style=" font-weight: 400; text-align: left; vertical-align: middle;">
-													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-														<tr>
-															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">${i.title}</span></h2>
-															</td>
-														</tr>
-													</table>
-													<table class="paragraph_block block-3" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" word-break: break-word;">
-														<tr>
-															<td class="pad" style="padding-bottom:5px;padding-top:5px;">
-																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:left">
-																	<p style="margin: 0;">Cant: ${i.quantity}</p>
-																</div>
-															</td>
-														</tr>
-													</table>
-												</td>
-												<td class="column column-3" width="33.333333333333336%" style=" font-weight: 400; text-align: left; vertical-align: middle;">
-													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-														<tr>
-															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${i.price}</span></h2>
-															</td>
-														</tr>
-													</table>
-													<div class="spacer_block block-2" style="height:55px;line-height:55px;font-size:1px;">&#8202;</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+               <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="font-family: Arial, sans-serif; width: 100%; max-width: 600px; margin: 0 auto;">
+  <tbody>
+    <tr>
+      <!-- Columna del producto -->
+      <td style="padding: 10px 0; vertical-align: top;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%;">
+          <tbody>
+            <tr>
+              <!-- Título, color, tamaño, cantidad -->
+              <td style="text-align: left; padding-bottom: 5px;">
+                <h2 style="margin: 0; font-size: 16px; font-weight: 600; color: #000;">${i.title}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: left; font-size: 14px; color: #333;">
+                Color: ${i.color || "-"}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: left; font-size: 14px; color: #333;">
+                Tamaño: ${i.size || "-"}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: left; font-size: 14px; color: #333;">
+                Cant: ${i.quantity}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <!-- Columna del precio -->
+      <td style="text-align: right; padding: 10px 0; vertical-align: top;">
+        <h2 style="margin: 0; font-size: 18px; font-weight: 600; color: #000;">$ ${i.price}</h2>
+      </td>
+    </tr>
+  </tbody>
+</table>
             `;
   });
 
@@ -356,7 +352,7 @@ export const mailDetailShopping = (ticket) => {
 													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 														<tr>
 															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${ticket.total.toLocaleString(
+																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${total.toLocaleString(
                                   "es-AR",
                                 )}</span></h2>
 															</td>
@@ -393,7 +389,7 @@ export const mailDetailShopping = (ticket) => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:right;">
-																	<p style="margin: 0;">-20%</p>
+																	<p style="margin: 0;">${mode === "Transferencia" ? "-20%" : "-"}</p>
 																</div>
 															</td>
 														</tr>
@@ -426,9 +422,9 @@ export const mailDetailShopping = (ticket) => {
 													<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${totalConDescuento.toLocaleString(
-                                  "es-AR",
-                                )}</span></h2>
+																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${
+                                  mode === "Transferencia" ? totalConDescuento.toLocaleString("es-AR") : total.toLocaleString("es-AR")
+                                }</span></h2>
 															</td>
 														</tr>
 													</table>
@@ -661,7 +657,7 @@ export const mailDetailShopping = (ticket) => {
 															<td class="pad">
 																<div style="color:#ffffff;direction:ltr;font-family:'Inter Tight','Arial';font-size:16px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:center">
 																	<p style="margin: 0; margin-bottom: 16px;">2025 Aerotactico</p>
-																	<p style="margin: 0; margin-bottom: 16px;">&nbsp;Calle 12312</p>
+																	<p style="margin: 0; margin-bottom: 16px;">&nbsp;Av. Santamarina 360</p>
 																	<p style="margin: 0;">Tandil, Buenos Aires</p>
 																</div>
 															</td>
@@ -673,8 +669,8 @@ export const mailDetailShopping = (ticket) => {
 																<div class="alignment" align="center">
 																	<table class="social-table" width="72px" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" display: inline-block;">
 																		<tr>
-																			<td style="padding:0 2px 0 2px;"><a href="https://www.instagram.com/" target="_blank"><img src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/instagram@2x.png" width="32" height="auto" alt="Instagram" title="instagram" style="display: block; height: auto; border: 0;"></a></td>
-																			<td style="padding:0 2px 0 2px;"><a href target="_blank"><img src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/website@2x.png" width="32" height="auto" alt="Web Site" title="Web Site" style="display: block; height: auto; border: 0;"></a></td>
+																			<td style="padding:0 2px 0 2px;"><a href="https://www.instagram.com/" target="_blank"><img src="https://www.instagram.com/aerotactico.tandil/" width="32" height="auto" alt="Instagram" title="instagram" style="display: block; height: auto; border: 0;"></a></td>
+																			<td style="padding:0 2px 0 2px;"><a href target="_blank"><img src="https://www.aerotactico-tandil.shop" width="32" height="auto" alt="Web Site" title="Web Site" style="display: block; height: auto; border: 0;"></a></td>
 																		</tr>
 																	</table>
 																</div>

@@ -6,7 +6,7 @@ import payRoutes from "../modules/pay/pay.routes.js";
 const indexRoutes = Router();
 
 indexRoutes.use("/api/products", productRouter);
-indexRoutes.use("/api/users", adminRouter);
+indexRoutes.use("/api/admin", adminRouter);
 indexRoutes.use("/api/pay", payRoutes);
 
 export default indexRoutes;

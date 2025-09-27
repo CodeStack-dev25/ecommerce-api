@@ -34,6 +34,7 @@ class ProductService {
     }
   }
 
+  //Actualizar Stock
   async updateStock(order) {
     try {
       if (!order.items || !Array.isArray(order.items)) {
@@ -41,7 +42,7 @@ class ProductService {
       }
 
       for (const item of order.items) {
-        const prod = await this.getProduct(item.productId); // o Product.findById(item.productId)
+        const prod = await this.getProduct(item.productId);
 
         if (!prod) {
           throw new Error(`Producto ${item.productId} no encontrado`);
@@ -57,10 +58,8 @@ class ProductService {
           throw new Error(`Stock insuficiente para ${prod.title} (${item.color} - ${item.size})`);
         }
 
-        // Descontar stock
         variant.stock -= item.quantity;
 
-        // Guardar producto actualizado
         await prod.save();
       }
 

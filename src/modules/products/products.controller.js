@@ -7,10 +7,7 @@ class ProductController {
   // Listar todos los productos
   async listProducts(req, res) {
     try {
-      // Tomamos los filtros desde query params
       const { category, title } = req.query;
-
-      // Obtenemos todos los productos
       let products = await ProductService.listProducts();
 
       if (!products || products.length === 0) {
@@ -18,12 +15,10 @@ class ProductController {
         return res.status(404).json({ error: "No se encontraron productos" });
       }
 
-      // Filtrar por categoría si existe
       if (category) {
         products = products.filter((p) => p.category.toLowerCase() === category.toLowerCase());
       }
 
-      // Filtrar por nombre si existe
       if (title) {
         products = products.filter((p) => p.title.toLowerCase().includes(title.toLowerCase()));
       }
@@ -55,7 +50,7 @@ class ProductController {
   // Crear un nuevo producto
   async createProduct(req, res) {
     try {
-      const productData = req.body; // directamente objeto
+      const productData = req.body;
       if (!productData) return res.status(400).json({ error: "No se recibió el producto" });
 
       const { brand = "", title, description = "", category, subCategory = "", price, variants = [] } = productData;
@@ -65,20 +60,28 @@ class ProductController {
       }
 
       let thumbnails = [];
-      const thumbnailFiles = req.files?.thumbnails || [];
+      const thumbnailFiles = req.files || [];
       if (thumbnailFiles.length > 0) {
         const results = await Promise.all(thumbnailFiles.map((file) => cloudinary.uploader.upload(file.path, { folder: "products" })));
         thumbnails = results.map((r) => ({ url: r.secure_url, public_id: r.public_id }));
         await ProductService.deleteLocalFiles(thumbnailFiles.map((f) => f.path));
       }
 
-      // Expandir variantes con sizes[]
-      const flatVariants = Array.isArray(variants)
-        ? variants.flatMap(
+      let parsedVariants = variants;
+
+      if (parsedVariants && typeof parsedVariants === "string") {
+        try {
+          parsedVariants = JSON.parse(parsedVariants);
+        } catch (err) {
+          parsedVariants = [];
+        }
+      }
+
+      const flatVariants = Array.isArray(parsedVariants)
+        ? parsedVariants.flatMap(
             (v) =>
               v.sizes?.map((s) => ({
                 color: v.name,
-                rgb: v.rgb,
                 size: s.name,
                 stock: s.stock ?? 0,
               })) || [],
@@ -109,15 +112,13 @@ class ProductController {
     try {
       const { pid } = req.params;
 
-      // 1️⃣ Obtener producto existente
       const existingProduct = await ProductService.getProduct(pid);
       if (!existingProduct) {
         return res.status(404).json({ error: "Producto no encontrado" });
       }
 
-      let { variants, ...rest } = req.body;
+      let { variants = [], ...rest } = req.body;
 
-      // 2️⃣ Parsear si viene como string
       if (variants && typeof variants === "string") {
         try {
           variants = JSON.parse(variants);
@@ -126,7 +127,6 @@ class ProductController {
         }
       }
 
-      // 3️⃣ Transformar variantes { name, rgb, sizes[] } en array plano
       if (Array.isArray(variants)) {
         const mergedVariants = [];
 
@@ -141,13 +141,10 @@ class ProductController {
             const index = mergedVariants.findIndex((ex) => ex.color === name && ex.size === s.name);
 
             if (index >= 0) {
-              // 🔄 Actualizamos stock
               mergedVariants[index].stock += s.stock;
             } else {
-              // ➕ Nueva variante
               mergedVariants.push({
                 color: name,
-                rgb,
                 size: s.name,
                 stock: s.stock ?? 0,
               });
@@ -158,14 +155,12 @@ class ProductController {
         existingProduct.variants = mergedVariants;
       }
 
-      // 4️⃣ Actualizar el resto de los campos del producto
       Object.keys(rest).forEach((key) => {
         if (rest[key] !== undefined) {
           existingProduct[key] = rest[key];
         }
       });
 
-      // 5️⃣ Guardar y devolver producto actualizado
       const updatedProduct = await existingProduct.save();
       appLogger.info("Producto actualizado correctamente");
       return res.status(200).json(updatedProduct);
@@ -176,12 +171,10 @@ class ProductController {
     }
   }
 
-  // Eliminar un producto por ID
   async deleteProduct(req, res) {
     try {
       const { pid } = req.params;
 
-      // Primero obtenemos el producto para tener sus thumbnails
       const product = await ProductService.getProduct(pid);
       if (!product) {
         appLogger.error("Producto no encontrado");

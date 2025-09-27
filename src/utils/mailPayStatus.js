@@ -1,6 +1,10 @@
 export const mailPayStatus = (ticket, mode) => {
-  const {user, items} = ticket
-  const date = new Date(ticket.createdAt)
+  const { user, total } = ticket;
+
+  const desc = ticket.total * 0.2;
+  const totalConDescuento = ticket.total - desc;
+
+  const date = new Date(ticket.createdAt);
   return `
     <!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
@@ -661,7 +665,11 @@ export const mailPayStatus = (ticket, mode) => {
                                       margin-bottom: 0;
                                     "
                                   >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">$ ${ticket.total.toLocaleString('es-AR')}</span>
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">$ ${
+                                      mode === "Transferencia"
+                                        ? totalConDescuento.toLocaleString("es-AR")
+                                        : ticket.total.toLocaleString("es-AR")
+                                    }</span>
                                   </h2>
                                 </td>
                               </tr>
@@ -691,7 +699,9 @@ export const mailPayStatus = (ticket, mode) => {
                                       margin-bottom: 0;
                                     "
                                   >
-                                    <span class="tinyMce-placeholder" style="word-break: break-word">${date.toLocaleDateString('es-AR')}</span>
+                                    <span class="tinyMce-placeholder" style="word-break: break-word">${date.toLocaleDateString(
+                                      "es-AR",
+                                    )}</span>
                                   </h2>
                                 </td>
                               </tr>
@@ -964,7 +974,7 @@ export const mailPayStatus = (ticket, mode) => {
                                     "
                                   >
                                     <p style="margin: 0; margin-bottom: 16px">2025 Aerotactico</p>
-                                    <p style="margin: 0; margin-bottom: 16px">&nbsp;Calle 12312</p>
+                                    <p style="margin: 0; margin-bottom: 16px">&nbsp;Av. Santamarina 360</p>
                                     <p style="margin: 0">Tandil, Buenos Aires</p>
                                   </div>
                                 </td>
@@ -992,7 +1002,7 @@ export const mailPayStatus = (ticket, mode) => {
                                     >
                                       <tr>
                                         <td style="padding: 0 2px 0 2px">
-                                          <a href="https://www.instagram.com/" target="_blank"
+                                          <a href="https://www.instagram.com/aerotactico.tandil/" target="_blank"
                                             ><img
                                               src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/instagram@2x.png"
                                               width="32"
@@ -1003,7 +1013,7 @@ export const mailPayStatus = (ticket, mode) => {
                                           /></a>
                                         </td>
                                         <td style="padding: 0 2px 0 2px">
-                                          <a href target="_blank"
+                                          <a href="https://www.aerotactico-tandil.shop" target="_blank"
                                             ><img
                                               src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/website@2x.png"
                                               width="32"

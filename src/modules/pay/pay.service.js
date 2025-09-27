@@ -1,5 +1,4 @@
 import SalesRepository from "./repositories/pay.repository.js";
-import ProductsService from "../products/products.service.js";
 
 class SalesService {
   async createSale(data) {

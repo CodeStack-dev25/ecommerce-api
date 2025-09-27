@@ -1,4 +1,3 @@
-// utils/colors.js
 export const colorMap = {
   blanco: "#FFFFFF",
   negro: "#333333",

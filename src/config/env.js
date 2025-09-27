@@ -15,5 +15,5 @@ export default {
     adminMail: process.env.ADMIN_MAIL,
     adminPass: process.env.ADMIN_PASS,
     frontURL: process.env.URL_FRONT,
-    backURL: process.env.URL_BACK
+    backURL: process.env.URL_BACK,
 }
