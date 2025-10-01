@@ -1,7 +1,7 @@
-export const mailDetailShopping = (ticket, mode) => {
+export const mailDetailShopping = (ticket, mode, discount) => {
   const { user, items, total } = ticket;
 
-  const desc = ticket.total * 0.2;
+  const desc = total - total * ((100 - discount) / 100);
   const totalConDescuento = ticket.total - desc;
 
   const date = new Date(ticket.createdAt);
@@ -40,7 +40,10 @@ export const mailDetailShopping = (ticket, mode) => {
       </td>
       <!-- Columna del precio -->
       <td style="text-align: right; padding: 10px 0; vertical-align: top;">
-        <h2 style="margin: 0; font-size: 18px; font-weight: 600; color: #000;">$ ${i.price}</h2>
+        <h2 style="margin: 0; font-size: 18px; font-weight: 600; color: #000;">$ ${i.price.toLocaleString("es-AR", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 2,
+        })}</h2>
       </td>
     </tr>
   </tbody>
@@ -354,6 +357,7 @@ export const mailDetailShopping = (ticket, mode) => {
 															<td class="pad" style="padding-bottom:10px;text-align:center;width:100%;">
 																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${total.toLocaleString(
                                   "es-AR",
+                                  { minimumFractionDigits: 1, maximumFractionDigits: 2 },
                                 )}</span></h2>
 															</td>
 														</tr>
@@ -389,7 +393,7 @@ export const mailDetailShopping = (ticket, mode) => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;">
 																<div style="color:#333333;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:1.2;text-align:right;">
-																	<p style="margin: 0;">${mode === "Transferencia" ? "-20%" : "-"}</p>
+																	<p style="margin: 0;">${mode === "Transferencia" ? `${discount}%` : "-"}</p>
 																</div>
 															</td>
 														</tr>
@@ -423,7 +427,9 @@ export const mailDetailShopping = (ticket, mode) => {
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;text-align:center;width:100%;">
 																<h2 style="margin: 0; color: #000; direction: ltr; font-family: 'Inter Tight','Arial'; font-size: 18px; font-weight: 600; letter-spacing: normal; line-height: 1.2; text-align: right; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder" style="word-break: break-word;">$ ${
-                                  mode === "Transferencia" ? totalConDescuento.toLocaleString("es-AR") : total.toLocaleString("es-AR")
+                                  mode === "Transferencia"
+                                    ? totalConDescuento.toLocaleString("es-AR", { minimumFractionDigits: 1, maximumFractionDigits: 2 })
+                                    : total.toLocaleString("es-AR", { minimumFractionDigits: 1, maximumFractionDigits: 2 })
                                 }</span></h2>
 															</td>
 														</tr>
@@ -559,7 +565,7 @@ export const mailDetailShopping = (ticket, mode) => {
 													<table class="button_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:10px;text-align:center;">
-																<div class="alignment" align="center"><a href="www.example.com" target="_blank" style="color:#ffffff;text-decoration:none;"><!--[if mso]>
+																<div class="alignment" align="center"><a href="https://www.aerotactico-tandil.shop/products" target="_blank" style="color:#ffffff;text-decoration:none;"><!--[if mso]>
 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"  href="www.example.com"  style="height:52px;width:268px;v-text-anchor:middle;" arcsize="0%" fillcolor="#000">
 <v:stroke dashstyle="Solid" weight="1px" color="#ffffff"/>
 <w:anchorlock/>
@@ -669,8 +675,8 @@ export const mailDetailShopping = (ticket, mode) => {
 																<div class="alignment" align="center">
 																	<table class="social-table" width="72px" border="0" cellpadding="0" cellspacing="0" role="presentation" style=" display: inline-block;">
 																		<tr>
-																			<td style="padding:0 2px 0 2px;"><a href="https://www.instagram.com/" target="_blank"><img src="https://www.instagram.com/aerotactico.tandil/" width="32" height="auto" alt="Instagram" title="instagram" style="display: block; height: auto; border: 0;"></a></td>
-																			<td style="padding:0 2px 0 2px;"><a href target="_blank"><img src="https://www.aerotactico-tandil.shop" width="32" height="auto" alt="Web Site" title="Web Site" style="display: block; height: auto; border: 0;"></a></td>
+																			<td style="padding:0 2px 0 2px;"><a href="https://www.instagram.com/aerotactico.tandil/" target="_blank"><img src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/instagram@2x.png" width="32" height="auto" alt="Instagram" title="instagram" style="display: block; height: auto; border: 0;"></a></td>
+																			<td style="padding:0 2px 0 2px;"><a href="https://www.aerotactico-tandil.shop" target="_blank"><img src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/website@2x.png" width="32" height="auto" alt="Web Site" title="Web Site" style="display: block; height: auto; border: 0;"></a></td>
 																		</tr>
 																	</table>
 																</div>

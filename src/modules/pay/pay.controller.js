@@ -5,6 +5,7 @@ import env from "../../config/env.js";
 import ProductService from "../products/products.service.js";
 import cloudinary from "../../config/cloudinary.js";
 import { adminTicket, detailTicket, sendTicket } from "../../utils/mails.js";
+import Setting from "../settings/model.js"
 
 const mpClient = new MercadoPagoConfig({ accessToken: env.mpToken });
 
@@ -12,7 +13,7 @@ class PayController {
   // Crear una nueva orden 
   async createSale(req, res) {
     try {
-      const { user, items, status } = req.body;
+      const { user, items } = req.body;
 
       if (!user || !items || !items.length) {
         return res.status(400).json({ error: "Datos incompletos" });
@@ -26,8 +27,6 @@ class PayController {
           return res.status(400).json({ error: "Items incompletos" });
         }
       }
-
-      const total = items.reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0);
 
       // Creamos preferencia Mercado Pago
       const preference = new Preference(mpClient);
@@ -44,8 +43,8 @@ class PayController {
             phone: { number: user.phone },
           },
           back_urls: {
-            success: `${env.frontURL}/`,
-            failure: `${env.frontURL}/`,
+            success: `${env.frontURL}/success`,
+            failure: `${env.frontURL}/failure`,
           },
           auto_return: "approved",
           notification_url: `${env.backURL}/api/pay/webhook`,
@@ -70,6 +69,7 @@ class PayController {
           price: i.price,
           color: i.color || "",
           size: i.size || "",
+          category: i.category
         })),
         total: parsedItems.reduce((acc, i) => acc + Number(i.price) * Number(i.quantity), 0),
         preferenceId: mpResponse.id,
@@ -127,7 +127,7 @@ class PayController {
         comprobanteUrl = result.secure_url;
         await ProductService.deleteLocalFiles([req.file.path]);
       }
-
+    
       const sale = {
         user: {
           name: parsedUser.name,
@@ -144,6 +144,7 @@ class PayController {
           price: i.price,
           color: i.color || "",
           size: i.size || "",
+          category: i.category
         })),
         total: parsedItems.reduce((acc, i) => acc + Number(i.price) * Number(i.quantity), 0),
         status: "pending",
@@ -181,6 +182,9 @@ class PayController {
         ticket.status = "approved";
       }
 
+      const disc = await Setting.findOne()
+      
+
       await SalesService.updateSaleStatus(ticket._id, ticket);
       
       let mode;
@@ -191,11 +195,11 @@ class PayController {
         mode = 'Mercado Pago'
       }
 
-      await sendTicket(ticket, mode);
+      await sendTicket(ticket, mode, disc.discount);
 
-      await detailTicket(ticket, mode)
+      await detailTicket(ticket, mode, disc.discount)
 
-      await adminTicket(ticket, mode)
+      await adminTicket(ticket, mode, disc.discount)
 
       await ProductService.updateStock(ticket);
 

@@ -16,7 +16,7 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["https://btct7znt-5173.brs.devtunnels.ms","https://jl4bm6kt-3000.brs.devtunnels.ms","www.aerotactico-tandil.shop"],
+    origin: ["https://btct7znt-5173.brs.devtunnels.ms","https://jl4bm6kt-3000.brs.devtunnels.ms","https://aerotactico-tandil.shop"],
     credentials: true,
   }),
 );

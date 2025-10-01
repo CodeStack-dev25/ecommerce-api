@@ -11,7 +11,7 @@ const variantSchema = new Schema(
 
 const productSchema = new Schema(
   {
-    brand: { type: String, required: true },
+    brand: { type: String },
     title: { type: String, required: true },
     description: { type: String },
     price: { type: Number, required: true },

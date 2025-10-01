@@ -1,7 +1,7 @@
-export const mailPayStatus = (ticket, mode) => {
-  const { user, total } = ticket;
+export const mailPayStatus = (ticket, mode, discount) => {
+  const { user } = ticket;
 
-  const desc = ticket.total * 0.2;
+  const desc = ticket.total - (ticket.total * ((100 - discount) / 100));
   const totalConDescuento = ticket.total - desc;
 
   const date = new Date(ticket.createdAt);
@@ -667,8 +667,8 @@ export const mailPayStatus = (ticket, mode) => {
                                   >
                                     <span class="tinyMce-placeholder" style="word-break: break-word">$ ${
                                       mode === "Transferencia"
-                                        ? totalConDescuento.toLocaleString("es-AR")
-                                        : ticket.total.toLocaleString("es-AR")
+                                        ? totalConDescuento.toLocaleString("es-AR",{ minimumFractionDigits: 1, maximumFractionDigits: 2 })
+                                        : ticket.total.toLocaleString("es-AR",{ minimumFractionDigits: 1, maximumFractionDigits: 2 })
                                     }</span>
                                   </h2>
                                 </td>
@@ -766,7 +766,7 @@ export const mailPayStatus = (ticket, mode) => {
                               <tr>
                                 <td class="pad" style="padding-bottom: 10px; padding-top: 10px; text-align: center">
                                   <div class="alignment" align="center">
-                                    <a href="https://jl4bm6kt-3000.brs.devtunnels.ms/" target="_blank" style="color: #ffffff; text-decoration: none"
+                                    <a href="https://www.aerotactico-tandil.shop/products" target="_blank" style="color: #ffffff; text-decoration: none"
                                       ><span
                                         class="button"
                                         style="

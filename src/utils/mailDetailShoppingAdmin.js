@@ -1,4 +1,4 @@
-export const mailDetailShoppingAdmin = (ticket, mode) => {
+export const mailDetailShoppingAdmin = (ticket, mode, discount) => {
   const user = ticket.user || {};
   const items = ticket.items || [];
   const date = new Date(ticket.createdAt);
@@ -12,14 +12,17 @@ export const mailDetailShoppingAdmin = (ticket, mode) => {
         <td style="border: 1px solid #ccc; padding: 8px; text-align:center;">${i.color || "-"}</td>
         <td style="border: 1px solid #ccc; padding: 8px; text-align:center;">${i.size || "-"}</td>
         <td style="border: 1px solid #ccc; padding: 8px; text-align:center;">${i.quantity}</td>
-        <td style="border: 1px solid #ccc; padding: 8px; text-align:right;">$ ${i.price.toLocaleString("es-AR")}</td>
+        <td style="border: 1px solid #ccc; padding: 8px; text-align:right;">$ ${i.price.toLocaleString("es-AR", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 2,
+        })}</td>
       </tr>`;
     })
     .join("");
 
   const total = ticket.total || 0;
-  const discount = total * 0.2;
-  const finalTotal = total - discount;
+  const discountVal = total - (total * (100 - discount)) / 100;
+  const finalTotal = total - discountVal;
 
   return `
   <div style="font-family: Arial, sans-serif; color: #333;">
@@ -59,15 +62,26 @@ export const mailDetailShoppingAdmin = (ticket, mode) => {
       ${itemsHTML}
       <tr>
         <td colspan="5" style="border: 1px solid #ccc; padding: 8px; text-align:right;"><strong>Subtotal:</strong></td>
-        <td style="border: 1px solid #ccc; padding: 8px; text-align:right;">$ ${total.toLocaleString("es-AR")}</td>
+        <td style="border: 1px solid #ccc; padding: 8px; text-align:right;">$ ${total.toLocaleString("es-AR", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 2,
+        })}</td>
       </tr>
       <tr>
-        <td colspan="5" style="border: 1px solid #ccc; padding: 8px; text-align:right; color:red;"><strong>Descuento 20%:</strong></td>
-        <td style="border: 1px solid #ccc; padding: 8px; text-align:right; color:red;">- $ ${discount.toLocaleString("es-AR")}</td>
+        <td colspan="5" style="border: 1px solid #ccc; padding: 8px; text-align:right; color:red;"><strong>Descuento ${discount}%:</strong></td>
+        <td style="border: 1px solid #ccc; padding: 8px; text-align:right; color:red;">${
+          mode === "Transferencia"
+            ? `-$ ${discountVal.toLocaleString("es-AR", { minimumFractionDigits: 1, maximumFractionDigits: 2 })}`
+            : "-"
+        }</td>
       </tr>
       <tr>
         <td colspan="5" style="border: 1px solid #ccc; padding: 8px; text-align:right;"><strong>Total final:</strong></td>
-        <td style="border: 1px solid #ccc; padding: 8px; text-align:right;"><strong>$ ${finalTotal.toLocaleString("es-AR")}</strong></td>
+        <td style="border: 1px solid #ccc; padding: 8px; text-align:right;"><strong>$ ${
+          mode === "Transferencia"
+            ? finalTotal.toLocaleString("es-AR", { minimumFractionDigits: 1, maximumFractionDigits: 2 })
+            : total.toLocaleString("es-AR", { minimumFractionDigits: 1, maximumFractionDigits: 2 })
+        }</strong></td>
       </tr>
     </table>
   </div>

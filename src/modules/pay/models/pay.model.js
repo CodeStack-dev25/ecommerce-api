@@ -16,6 +16,7 @@ const saleSchema = new Schema(
         title: { type: String, required: true },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
+        category:{type: String},
         color: { type: String },
         size: { type: String },
       },
