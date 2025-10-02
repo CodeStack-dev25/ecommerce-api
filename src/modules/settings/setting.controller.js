@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Settings from "../settings/model.js"; 
 import Product from "../products/models/products.model.js";
+import { appLogger } from "../../utils/logger.js";
 
 const settingRouter = Router();
 
@@ -13,8 +14,11 @@ settingRouter.get("/", async (req, res) => {
       settings = new Settings({ discount: 0 });
       await settings.save();
     }
+
+    appLogger.info("Configuración obtenida correctamente");
     res.json(settings);
   } catch (err) {
+    appLogger.error("Error al obtener configuración", err);
     res.status(500).json({ error: "Error al obtener configuración" });
   }
 });
@@ -35,8 +39,10 @@ settingRouter.post("/discount", async (req, res) => {
     }
     await settings.save();
 
+    appLogger.info("Descuento actualizado correctamente");
     res.json({ message: "Descuento actualizado", discount: settings.discount });
   } catch (err) {
+    appLogger.error("Error al actualizar descuento", err);
     res.status(500).json({ error: "Error al actualizar descuento" });
   }
 });
@@ -54,8 +60,10 @@ settingRouter.post("/increase-prices", async (req, res) => {
 
     await Product.updateMany({}, [{ $set: { price: { $round: [{ $multiply: ["$price", multiplier] }, 2] } } }]);
 
+    appLogger.info(`Precios aumentados un ${percentage}% correctamente`);
     res.json({ message: `Precios aumentados un ${percentage}%` });
   } catch (err) {
+    appLogger.error("Error al aumentar precios", err);
     res.status(500).json({ error: "Error al aumentar precios" });
   }
 });

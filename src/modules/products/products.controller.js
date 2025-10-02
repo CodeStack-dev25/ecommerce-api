@@ -41,8 +41,10 @@ class ProductController {
       if (!product) return res.status(404).json({ error: "Producto no encontrado" });
 
       const mappedProduct = mapProduct(product);
+      appLogger.info("Producto obtenido correctamente");
       return res.status(200).json(mappedProduct);
     } catch (err) {
+      appLogger.error("Error al obtener el producto", err);
       return res.status(500).json({ error: "Error al obtener el producto" });
     }
   }

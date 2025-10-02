@@ -76,6 +76,7 @@ class PayController {
         status: "pending",
       });
 
+      appLogger.info("Venta creada correctamente");
       return res.status(201).json({
         message: "Orden creada correctamente",
         sale,
