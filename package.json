@@ -4,8 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/app.js",
-    "dev1": "node src/app.js",
+    "start": "node src/app.js",
     "test": "mocha 'test/**/*.test.js'"
   },
   "repository": {
