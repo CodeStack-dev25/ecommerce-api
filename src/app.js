@@ -16,10 +16,14 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["https://aerotactico-tandil.shop"],
+    origin: [
+      "https://aerotactico-tandil.shop",
+      "https://www.aerotactico-tandil.shop"
+    ],
     credentials: true,
-  }),
+  })
 );
+
 
 app.use(bodyParser.json());
 //PUBLIC
