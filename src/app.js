@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: [
       "https://aerotactico-tandil.shop",
-      "https://www.aerotactico-tandil.shop"
+      "https://www.aerotactico-tandil.shop",
     ],
     credentials: true,
   })
