@@ -1,36 +1,31 @@
 openapi: 3.0.1
 info:
   title: API E-commerce - Cristian Developer
-  version: 1.0.0
+  version: 1.1.0
   description: >
     API E-commerce para la gestión integral de productos, pedidos, clientes y configuraciones.  
-    Esta documentación incluye todos los módulos del sistema: 
-    
-    - 🛍️ **Productos:** Control completo de artículos, precios y stock.  
+    Incluye todos los módulos del sistema:
 
-    - 💳 **Pagos:** Creación y seguimiento de ventas.  
-    
+    - 🛍️ **Productos:** Control completo de artículos, precios y stock.  
+    - 💳 **Pagos:** Creación y seguimiento de ventas (Mercado Pago y transferencias).  
     - ⚙️ **Configuraciones:** Administración global de descuentos y ajustes de precios.  
-    
-    - 🔐 **Administración:** Login y gestión de sesión de administrador.  
+    - 🔐 **Administración:** Login y gestión de sesión de administrador.
 
     > **Nota:** Documentación en modo lectura. No permite ejecutar endpoints desde el navegador.
 
 servers:
   - url: https://aerotactico.cristiandeveloper.site/api
-    description: Servidor
+    description: Servidor de producción
+  - url: http://localhost:4000/api
+    description: Servidor local
 
 tags:
- 
   - name: Productos
     description: Endpoints relacionados con la gestión de productos
-  
   - name: Pagos
     description: Endpoints para registrar ventas y procesar pagos
-  
   - name: Configuración
     description: Endpoints para control de descuentos y precios
- 
   - name: Administración
     description: Endpoints de autenticación y gestión de sesión
 
@@ -39,10 +34,9 @@ paths:
     get:
       tags: [Productos]
       summary: Listar todos los productos
-      description: Retorna una lista completa de productos registrados.
       responses:
         "200":
-          description: Lista de productos obtenida correctamente
+          description: Lista de productos
           content:
             application/json:
               schema:
@@ -51,8 +45,7 @@ paths:
                   $ref: "#/components/schemas/Product"
     post:
       tags: [Productos]
-      summary: Crear un nuevo producto
-      description: Crea un nuevo producto y permite subir imágenes asociadas.
+      summary: Crear un producto
       requestBody:
         required: true
         content:
@@ -74,7 +67,7 @@ paths:
                   type: number
                 variants:
                   type: string
-                  description: JSON con variantes (color, talla, stock)
+                  description: JSON con variantes
                 thumbnails:
                   type: array
                   items:
@@ -82,7 +75,7 @@ paths:
                     format: binary
       responses:
         "201":
-          description: Producto creado correctamente
+          description: Producto creado
           content:
             application/json:
               schema:
@@ -100,7 +93,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Producto obtenido correctamente
+          description: Producto obtenido
           content:
             application/json:
               schema:
@@ -135,7 +128,6 @@ paths:
                   type: number
                 variants:
                   type: string
-                  description: JSON con variantes (color, talla, stock)
                 thumbnails:
                   type: array
                   items:
@@ -143,7 +135,7 @@ paths:
                     format: binary
       responses:
         "200":
-          description: Producto actualizado correctamente
+          description: Producto actualizado
           content:
             application/json:
               schema:
@@ -159,16 +151,92 @@ paths:
             type: string
       responses:
         "200":
-          description: Producto eliminado correctamente
+          description: Producto eliminado
 
   /pay/createSale:
     post:
       tags: [Pagos]
-      summary: Crear una nueva venta
-      description: Registra una nueva venta y genera un identificador único de transacción.
+      summary: Crear una venta (Mercado Pago)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    phone:
+                      type: string
+                    address:
+                      type: string
+                    city:
+                      type: string
+                    postalCode:
+                      type: string
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: string
+                      title:
+                        type: string
+                      price:
+                        type: number
+                      quantity:
+                        type: number
       responses:
         "201":
           description: Venta creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sale"
+
+  /pay/webhook:
+    post:
+      tags: [Pagos]
+      summary: Webhook de Mercado Pago
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Webhook recibido
+
+  /pay/uploadReceipt:
+    post:
+      tags: [Pagos]
+      summary: Crear venta con transferencia (subida de comprobante)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+                  description: JSON del usuario
+                items:
+                  type: string
+                  description: JSON con los items de la venta
+                receipt:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Venta creada con transferencia
           content:
             application/json:
               schema:
@@ -188,17 +256,36 @@ paths:
                 items:
                   $ref: "#/components/schemas/Sale"
 
+  /pay/{tid}:
+    put:
+      tags: [Pagos]
+      summary: Actualizar estado de la venta
+      parameters:
+        - name: tid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Estado actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sale"
+
   /settings:
     get:
       tags: [Configuración]
       summary: Obtener configuración actual
       responses:
         "200":
-          description: Configuración obtenida correctamente
+          description: Configuración obtenida
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Settings"
+
   /settings/discount:
     put:
       tags: [Configuración]
@@ -214,7 +301,8 @@ paths:
                   type: number
       responses:
         "200":
-          description: Descuento actualizado correctamente
+          description: Descuento actualizado
+
   /settings/increase-prices:
     put:
       tags: [Configuración]
@@ -230,12 +318,12 @@ paths:
                   type: number
       responses:
         "200":
-          description: Precios actualizados correctamente
+          description: Precios actualizados
 
   /admin/login:
     post:
       tags: [Administración]
-      summary: Iniciar sesión como administrador
+      summary: Iniciar sesión
       requestBody:
         required: true
         content:
@@ -249,16 +337,17 @@ paths:
                   type: string
       responses:
         "200":
-          description: Sesión iniciada correctamente
+          description: Sesión iniciada
         "401":
           description: Credenciales inválidas
+
   /admin/logout:
     post:
       tags: [Administración]
       summary: Cerrar sesión
       responses:
         "200":
-          description: Sesión finalizada correctamente
+          description: Sesión finalizada
 
 components:
   schemas:
@@ -310,11 +399,52 @@ components:
       properties:
         _id:
           type: string
-        client:
-          type: string
+        user:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            address:
+              type: string
+            city:
+              type: string
+            postalCode:
+              type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              title:
+                type: string
+              price:
+                type: number
+              quantity:
+                type: number
+              color:
+                type: string
+              size:
+                type: string
+              category:
+                type: string
         total:
           type: number
-        date:
+        status:
+          type: string
+        preferenceId:
+          type: string
+        comprobanteUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
           type: string
           format: date-time
     Settings:
@@ -324,6 +454,7 @@ components:
           type: number
         priceIncrease:
           type: number
+
   securitySchemes:
     AdminAuth:
       type: http
