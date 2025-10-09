@@ -1,0 +1,334 @@
+openapi: 3.0.1
+info:
+  title: API E-commerce - Cristian Developer
+  version: 1.0.0
+  description: >
+    API E-commerce para la gestión integral de productos, pedidos, clientes y configuraciones.  
+    Esta documentación incluye todos los módulos del sistema: 
+    
+    - 🛍️ **Productos:** Control completo de artículos, precios y stock.  
+
+    - 💳 **Pagos:** Creación y seguimiento de ventas.  
+    
+    - ⚙️ **Configuraciones:** Administración global de descuentos y ajustes de precios.  
+    
+    - 🔐 **Administración:** Login y gestión de sesión de administrador.  
+
+    > **Nota:** Documentación en modo lectura. No permite ejecutar endpoints desde el navegador.
+
+servers:
+  - url: https://aerotactico.cristiandeveloper.site/api
+    description: Servidor
+
+tags:
+ 
+  - name: Productos
+    description: Endpoints relacionados con la gestión de productos
+  
+  - name: Pagos
+    description: Endpoints para registrar ventas y procesar pagos
+  
+  - name: Configuración
+    description: Endpoints para control de descuentos y precios
+ 
+  - name: Administración
+    description: Endpoints de autenticación y gestión de sesión
+
+paths:
+  /products:
+    get:
+      tags: [Productos]
+      summary: Listar todos los productos
+      description: Retorna una lista completa de productos registrados.
+      responses:
+        "200":
+          description: Lista de productos obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      tags: [Productos]
+      summary: Crear un nuevo producto
+      description: Crea un nuevo producto y permite subir imágenes asociadas.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                subCategory:
+                  type: string
+                price:
+                  type: number
+                variants:
+                  type: string
+                  description: JSON con variantes (color, talla, stock)
+                thumbnails:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "201":
+          description: Producto creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+  /products/{pid}:
+    get:
+      tags: [Productos]
+      summary: Obtener producto por ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    put:
+      tags: [Productos]
+      summary: Actualizar producto por ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                subCategory:
+                  type: string
+                price:
+                  type: number
+                variants:
+                  type: string
+                  description: JSON con variantes (color, talla, stock)
+                thumbnails:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "200":
+          description: Producto actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    delete:
+      tags: [Productos]
+      summary: Eliminar producto por ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto eliminado correctamente
+
+  /pay/createSale:
+    post:
+      tags: [Pagos]
+      summary: Crear una nueva venta
+      description: Registra una nueva venta y genera un identificador único de transacción.
+      responses:
+        "201":
+          description: Venta creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Sale"
+
+  /pay:
+    get:
+      tags: [Pagos]
+      summary: Listar todas las ventas
+      responses:
+        "200":
+          description: Lista de ventas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sale"
+
+  /settings:
+    get:
+      tags: [Configuración]
+      summary: Obtener configuración actual
+      responses:
+        "200":
+          description: Configuración obtenida correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
+  /settings/discount:
+    put:
+      tags: [Configuración]
+      summary: Actualizar descuento global
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                discount:
+                  type: number
+      responses:
+        "200":
+          description: Descuento actualizado correctamente
+  /settings/increase-prices:
+    put:
+      tags: [Configuración]
+      summary: Aumentar precios de todos los productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                percentage:
+                  type: number
+      responses:
+        "200":
+          description: Precios actualizados correctamente
+
+  /admin/login:
+    post:
+      tags: [Administración]
+      summary: Iniciar sesión como administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Sesión iniciada correctamente
+        "401":
+          description: Credenciales inválidas
+  /admin/logout:
+    post:
+      tags: [Administración]
+      summary: Cerrar sesión
+      responses:
+        "200":
+          description: Sesión finalizada correctamente
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        brand:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        subCategory:
+          type: string
+        thumbnails:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              public_id:
+                type: string
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              color:
+                type: string
+              size:
+                type: string
+              stock:
+                type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Sale:
+      type: object
+      properties:
+        _id:
+          type: string
+        client:
+          type: string
+        total:
+          type: number
+        date:
+          type: string
+          format: date-time
+    Settings:
+      type: object
+      properties:
+        discount:
+          type: number
+        priceIncrease:
+          type: number
+  securitySchemes:
+    AdminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - AdminAuth: []

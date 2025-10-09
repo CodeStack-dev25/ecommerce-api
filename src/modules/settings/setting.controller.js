@@ -1,71 +1,44 @@
-import { Router } from "express";
-import Settings from "../settings/model.js"; 
-import Product from "../products/models/products.model.js";
+import SettingsService from "./setting.services.js";
 import { appLogger } from "../../utils/logger.js";
 
-const settingRouter = Router();
-
-//Obtener configuración global (descuento, etc.)
-
-settingRouter.get("/", async (req, res) => {
-  try {
-    let settings = await Settings.findOne();
-    if (!settings) {
-      settings = new Settings({ discount: 0 });
-      await settings.save();
+class SettingsController {
+  // Obtener configuración global
+  async getSettings(req, res) {
+    try {
+      const settings = await SettingsService.getAllSettings();
+      appLogger.info("Configuración obtenida correctamente");
+      res.status(200).json(settings);
+    } catch (err) {
+      appLogger.error("Error al obtener configuración", err);
+      res.status(500).json({ error: "Error al obtener configuración" });
     }
-
-    appLogger.info("Configuración obtenida correctamente");
-    res.json(settings);
-  } catch (err) {
-    appLogger.error("Error al obtener configuración", err);
-    res.status(500).json({ error: "Error al obtener configuración" });
   }
-});
 
-//Actualizar porcentaje de descuento global
-settingRouter.post("/discount", async (req, res) => {
-  try {
-    const { discount } = req.body;
-    if (discount < 0 || discount > 100) {
-      return res.status(400).json({ error: "El descuento debe estar entre 0 y 100" });
+  // Actualizar porcentaje de descuento
+  async updateDiscount(req, res) {
+    try {
+      const { discount } = req.body;
+      const settings = await SettingsService.updDiscount(discount);
+      appLogger.info("Descuento actualizado correctamente");
+      res.status(200).json({ message: "Descuento actualizado", discount: settings.discount });
+    } catch (err) {
+      appLogger.error("Error al actualizar descuento", err);
+      res.status(400).json({ error: err.message });
     }
-
-    let settings = await Settings.findOne();
-    if (!settings) {
-      settings = new Settings({ discount });
-    } else {
-      settings.discount = discount;
-    }
-    await settings.save();
-
-    appLogger.info("Descuento actualizado correctamente");
-    res.json({ message: "Descuento actualizado", discount: settings.discount });
-  } catch (err) {
-    appLogger.error("Error al actualizar descuento", err);
-    res.status(500).json({ error: "Error al actualizar descuento" });
   }
-});
 
-// Aumentar precios de todos los productos por porcentaje
-
-settingRouter.post("/increase-prices", async (req, res) => {
-  try {
-    const { percentage } = req.body;
-    if (!percentage || isNaN(percentage)) {
-      return res.status(400).json({ error: "Porcentaje inválido" });
+  // Aumentar precios de productos
+  async increaseProductPrices(req, res) {
+    try {
+      const { percentage } = req.body;
+      await SettingsService.increasePrices(percentage);
+      appLogger.info(`Precios aumentados un ${percentage}% correctamente`);
+      res.status(200).json({ message: `Precios aumentados un ${percentage}%` });
+    } catch (err) {
+      appLogger.error("Error al aumentar precios", err);
+      res.status(400).json({ error: err.message });
     }
-
-    const multiplier = 1 + percentage / 100;
-
-    await Product.updateMany({}, [{ $set: { price: { $round: [{ $multiply: ["$price", multiplier] }, 2] } } }]);
-
-    appLogger.info(`Precios aumentados un ${percentage}% correctamente`);
-    res.json({ message: `Precios aumentados un ${percentage}%` });
-  } catch (err) {
-    appLogger.error("Error al aumentar precios", err);
-    res.status(500).json({ error: "Error al aumentar precios" });
   }
-});
+}
 
-export default settingRouter;
+export default new SettingsController();

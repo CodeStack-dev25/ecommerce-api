@@ -9,27 +9,24 @@ import bodyParser from "body-parser";
 import { __dirname } from "./path.js";
 import { addLogger, appLogger } from "./utils/logger.js";
 import MongoSingleton from "./config/db.js";
-
+import path from "path"; // 👈 agregado
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 const app = express();
 
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      "https://aerotactico-tandil.shop",
-      "https://www.aerotactico-tandil.shop",
-    ],
+    origin: ["https://aerotactico-tandil.shop", "https://www.aerotactico-tandil.shop", "http://localhost:4000"],
     credentials: true,
-  })
+  }),
 );
 
-
 app.use(bodyParser.json());
-//PUBLIC
 app.use(express.static(__dirname + "/public"));
 
-//SESSION
+// SESSION
 app.use(
   session({
     store: MongoStore.create({
@@ -44,11 +41,56 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-
 app.use(addLogger);
 
 app.use(indexRouter);
+
+// ✅ servir la carpeta de docs correctamente
+app.use("/docs", express.static(__dirname + "/docs"));
+
+app.get("/", (req, res) => {
+  const host = req.headers.host;
+  const protocol = req.protocol;
+  const specUrl = `${protocol}://${host}/docs/openapi.yaml`;
+
+  console.log(specUrl);
+
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Documentación API || Ecommerce</title>
+        <meta charset="UTF-8"/>
+        <style>
+          body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+          }
+          rapidoc {
+            height: 100vh;
+          }
+                rapi-doc::part(section-navbar) { /* <<< targets navigation bar */
+      background: linear-gradient(90deg, #3d4e70, #2e3746);
+    }
+        </style>
+      </head>
+      <body>
+        <rapi-doc 
+          spec-url="${specUrl}"
+          theme="light"
+          show-header="false"
+          render-style="read"
+
+        >
+        </rapi-doc>
+
+        <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+      </body>
+    </html>
+  `);
+});
 
 async function connectMongo() {
   appLogger.info("Iniciando servicio para MongoDB");
@@ -60,7 +102,7 @@ async function connectMongo() {
   }
 }
 
-let PORT = env.port || 8080;
+const PORT = env.port || 8080;
 
 app.listen(PORT, () => {
   appLogger.http(`Servidor iniciado en PUERTO: ${PORT}`);

@@ -5,7 +5,7 @@ import env from "../../config/env.js";
 import ProductService from "../products/products.service.js";
 import cloudinary from "../../config/cloudinary.js";
 import { adminTicket, detailTicket, sendTicket } from "../../utils/mails.js";
-import Setting from "../settings/model.js"
+import Setting from "../settings/models/setting.model.js"
 
 const mpClient = new MercadoPagoConfig({ accessToken: env.mpToken });
 

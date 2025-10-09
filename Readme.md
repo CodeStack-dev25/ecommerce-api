@@ -1,90 +1,151 @@
-# 🛒 E-commerce API
+# API E-commerce - Cristian Developer
 
-API genérica para un sistema de E-commerce, desarrollada con **Node.js**, **Express.js** y **MongoDB** siguiendo una arquitectura modular con **Repository Pattern**.
+![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
+![Express](https://img.shields.io/badge/Express-4.x-lightgrey)
+![MongoDB](https://img.shields.io/badge/MongoDB-5.x-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-## 🚀 Tecnologías
+## Descripción
 
-- **Node.js** + **Express.js** → Backend y manejo de rutas.
-- **MongoDB + Mongoose** → Base de datos NoSQL.
-- **Repository Pattern** → Separación de lógica de negocio y acceso a datos.
-- **JWT** → Autenticación y autorización.
-- **Cloudinary** → Gestión de imágenes de productos.
+API E-commerce desarrollada para la **gestión integral de productos, pedidos, clientes y configuraciones**.  
+Permite:
 
-## ⚙️ Instalación
+- 🛍️ **Productos:** CRUD completo de artículos, precios, stock e imágenes asociadas.
+- 💳 **Pagos:** Registro de ventas y seguimiento de transacciones.
+- ⚙️ **Configuraciones:** Administración de descuentos y ajustes de precios globales.
+- 🔐 **Administración:** Login y gestión de sesión de administrador.
 
-# Clonar el repositorio
-git clone https://github.com/CodeStack-dev25/ecommerce-api.git
+> La documentación está en **modo lectura**, evitando la ejecución de endpoints desde el navegador.
 
-# Entrar al proyecto
-cd ecommerce_api
+---
 
-# Instalar dependencias
+## Tecnologías
+
+- **Node.js** + **Express**
+- **MongoDB** con **Mongoose**
+- **Cloudinary** para gestión de imágenes
+- **Swagger / OpenAPI** para documentación
+- **RapiDoc** para visualización interactiva (solo lectura)
+- **CORS**, **cookie-parser**, **express-session** para seguridad y sesiones
+- **Winston** para logging
+
+---
+
+## Instalación
+
+1. Clonar el repositorio:
+
+```bash
+git clone https://github.com/tu-usuario/api-ecommerce.git
+cd api-ecommerce
+```
+
+2. Instalar dependencias:
+
+```bash
 npm install
+```
 
-# Crear archivo de variables de entorno
-cp .env.example .env
+3. Configurar variables de entorno en .env:
 
-# Desarrollo
-npm run dev
+```bash
+PORT=4000
+MONGO_URI=<tu_uri_mongodb>
+SECRET=<clave_secreta_para_session>
+CLOUDINARY_URL=<url_cloudinary>
+```
 
-# Producción
-npm run build
+4. Iniciar la API:
+
+```bash
 npm start
+```
 
-## 📌 Endpoints Principales
+## Endpoints Principales
 
-# 🔐 Autenticación
+# Productos
 
-- POST /api/auth/register → Registrar usuario
+- GET /products → Listar todos los productos
 
-- POST /api/auth/login → Iniciar sesión
+- POST /products → Crear un producto (con imágenes)
 
-# 👤 Usuarios
+- GET /products/{pid} → Obtener producto por ID
 
-- GET /api/users → Listar usuarios (admin)
+- PUT /products/{pid} → Actualizar producto
 
-- GET /api/users/:id → Obtener usuario por ID
+- DELETE /products/{pid} → Eliminar producto
 
-- PUT /api/users/:id → Actualizar usuario
+# Pagos
 
-- DELETE /api/users/:id → Eliminar usuario
+- POST /pay/createSale → Crear nueva venta
 
-# 🛍️ Productos
+- GET /pay → Listar todas las ventas
 
-- GET /api/products → Listar productos
+- Configuración
 
-- GET /api/products/:id → Ver detalle de producto
+- GET /settings → Obtener configuración actual
 
-- POST /api/products → Crear producto (admin)
+- PUT /settings/discount → Actualizar descuento global
 
-- PUT /api/products/:id → Actualizar producto
+- PUT /settings/increase-prices → Aumentar precios globales
 
-- DELETE /api/products/:id → Eliminar producto
+# Administración
 
-# 📦 Pedidos
+- POST /admin/login → Iniciar sesión
 
-- POST /api/orders → Crear pedido
+- POST /admin/logout → Cerrar sesión
 
-- GET /api/orders/:id → Obtener detalle de pedido
+# Documentación
 
-- GET /api/orders/user/:userId → Listar pedidos de un usuario
+La documentación completa está disponible en:
 
-- PUT /api/orders/:id → Actualizar estado de pedido
+RapiDoc (modo lectura):
+Abrir en el navegador: http://localhost:4000/
 
-# 💳 Pagos
+Archivo OpenAPI / Swagger:
+http://localhost:4000/docs/openapi.json
 
-- POST /api/payments/checkout → Procesar pago
+La documentación está unificada para todos los módulos y evita errores de referencia.
 
-- GET /api/payments/status/:id → Estado del pago
+## Ejemplo de Respuesta
 
- # 🏗️ Arquitectura
+# Producto
 
-- Models → Definen la estructura de los datos (Mongoose Schemas).
+```bash
+{
+  "_id": "6705bdf8c3e64a2bfb8dcf10",
+  "brand": "Nike",
+  "title": "Zapatillas Air Force 1",
+  "description": "Zapatillas clásicas de cuero blanco",
+  "price": 149.99,
+  "category": "Calzado",
+  "subCategory": "Deportivas",
+  "thumbnails": [
+    {
+      "url": "https://res.cloudinary.com/demo/image/upload/v12345/producto.jpg",
+      "public_id": "products/abc123"
+    }
+  ],
+  "variants": [
+    { "color": "Rojo", "size": "42", "stock": 10 }
+  ],
+  "createdAt": "2025-10-09T12:00:00.000Z",
+  "updatedAt": "2025-10-09T12:00:00.000Z"
+}
+```
 
-- Repositories → Acceso a base de datos, CRUD básico.
+## Seguridad
 
-- Services → Lógica de negocio, validaciones y procesos.
+- Autenticación con JWT para endpoints de administración.
 
-- Controllers → Reciben la request, llaman a services y devuelven la response.
+- CORS configurado solo para dominios específicos.
 
-- Routes → Definen las rutas de cada módulo.
+- Sesiones almacenadas en MongoDB.
+
+## Autor
+
+- CodeStack – [Portfolio](https://www.codestack-dev.click)
+
+## Licencia
+
+MIT License © 2025 CodeStack

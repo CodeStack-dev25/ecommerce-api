@@ -2,7 +2,7 @@ import { Router } from "express";
 import productRouter from "../modules/products/products.routes.js";
 import adminRouter from "../modules/users/users.routes.js";
 import payRoutes from "../modules/pay/pay.routes.js";
-import settingRouter from "../modules/settings/setting.controller.js";
+import settingRouter from "../modules/settings/setting.routes.js";
 
 const indexRoutes = Router();
 
