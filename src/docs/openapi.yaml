@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: API E-commerce - Cristian Developer
-  version: 1.1.0
+  version: 1.2.0
   description: >
     API E-commerce para la gestión integral de productos, pedidos, clientes y configuraciones.  
     Incluye todos los módulos del sistema:
@@ -30,129 +30,6 @@ tags:
     description: Endpoints de autenticación y gestión de sesión
 
 paths:
-  /products:
-    get:
-      tags: [Productos]
-      summary: Listar todos los productos
-      responses:
-        "200":
-          description: Lista de productos
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Product"
-    post:
-      tags: [Productos]
-      summary: Crear un producto
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                brand:
-                  type: string
-                title:
-                  type: string
-                description:
-                  type: string
-                category:
-                  type: string
-                subCategory:
-                  type: string
-                price:
-                  type: number
-                variants:
-                  type: string
-                  description: JSON con variantes
-                thumbnails:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-      responses:
-        "201":
-          description: Producto creado
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Product"
-
-  /products/{pid}:
-    get:
-      tags: [Productos]
-      summary: Obtener producto por ID
-      parameters:
-        - name: pid
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Producto obtenido
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Product"
-    put:
-      tags: [Productos]
-      summary: Actualizar producto por ID
-      parameters:
-        - name: pid
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: false
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                brand:
-                  type: string
-                title:
-                  type: string
-                description:
-                  type: string
-                category:
-                  type: string
-                subCategory:
-                  type: string
-                price:
-                  type: number
-                variants:
-                  type: string
-                thumbnails:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-      responses:
-        "200":
-          description: Producto actualizado
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Product"
-    delete:
-      tags: [Productos]
-      summary: Eliminar producto por ID
-      parameters:
-        - name: pid
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Producto eliminado
-
   /pay/createSale:
     post:
       tags: [Pagos]
@@ -166,6 +43,7 @@ paths:
               properties:
                 user:
                   type: object
+                  description: Datos del cliente
                   properties:
                     name:
                       type: string
@@ -179,6 +57,13 @@ paths:
                       type: string
                     postalCode:
                       type: string
+                  example:
+                    name: "Cristian Fernández"
+                    email: "cristian@example.com"
+                    phone: "123456789"
+                    address: "Calle Falsa 123"
+                    city: "Tandil"
+                    postalCode: "7000"
                 items:
                   type: array
                   items:
@@ -192,6 +77,11 @@ paths:
                         type: number
                       quantity:
                         type: number
+                    example:
+                      productId: "6705bdf8c3e64a2bfb8dcf10"
+                      title: "Zapatillas Air Force 1"
+                      price: 149.99
+                      quantity: 2
       responses:
         "201":
           description: Venta creada correctamente
@@ -199,6 +89,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Sale"
+              example:
+                _id: "64f2f3abc123"
+                user:
+                  name: "Cristian Fernández"
+                  email: "cristian@example.com"
+                  phone: "123456789"
+                  address: "Calle Falsa 123"
+                  city: "Tandil"
+                  postalCode: "7000"
+                items:
+                  - productId: "6705bdf8c3e64a2bfb8dcf10"
+                    title: "Zapatillas Air Force 1"
+                    price: 149.99
+                    quantity: 2
+                    color: "Blanco"
+                    size: "42"
+                    category: "Calzado"
+                total: 299.98
+                status: "pending"
+                preferenceId: "1234567890"
+                comprobanteUrl: null
+                createdAt: "2025-10-09T10:00:00Z"
+                updatedAt: "2025-10-09T10:00:00Z"
 
   /pay/webhook:
     post:
@@ -210,9 +123,13 @@ paths:
           application/json:
             schema:
               type: object
+              example:
+                type: "payment"
+                data:
+                  id: 1234567890
       responses:
         "200":
-          description: Webhook recibido
+          description: Webhook recibido correctamente
 
   /pay/uploadReceipt:
     post:
@@ -228,9 +145,11 @@ paths:
                 user:
                   type: string
                   description: JSON del usuario
+                  example: '{"name":"Cristian Fernández","email":"cristian@example.com"}'
                 items:
                   type: string
                   description: JSON con los items de la venta
+                  example: '[{"productId":"6705bdf8c3e64a2bfb8dcf10","title":"Zapatillas Air Force 1","price":149.99,"quantity":2}]'
                 receipt:
                   type: string
                   format: binary
@@ -255,6 +174,29 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Sale"
+              example:
+                - _id: "64f2f3abc123"
+                  user:
+                    name: "Cristian Fernández"
+                    email: "cristian@example.com"
+                    phone: "123456789"
+                    address: "Calle Falsa 123"
+                    city: "Tandil"
+                    postalCode: "7000"
+                  items:
+                    - productId: "6705bdf8c3e64a2bfb8dcf10"
+                      title: "Zapatillas Air Force 1"
+                      price: 149.99
+                      quantity: 2
+                      color: "Blanco"
+                      size: "42"
+                      category: "Calzado"
+                  total: 299.98
+                  status: "pending"
+                  preferenceId: "1234567890"
+                  comprobanteUrl: null
+                  createdAt: "2025-10-09T10:00:00Z"
+                  updatedAt: "2025-10-09T10:00:00Z"
 
   /pay/{tid}:
     put:
@@ -266,88 +208,17 @@ paths:
           required: true
           schema:
             type: string
+          example: "64f2f3abc123"
       responses:
         "201":
-          description: Estado actualizado correctamente
+          description: Estado actualizado
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Sale"
-
-  /settings:
-    get:
-      tags: [Configuración]
-      summary: Obtener configuración actual
-      responses:
-        "200":
-          description: Configuración obtenida
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Settings"
-
-  /settings/discount:
-    put:
-      tags: [Configuración]
-      summary: Actualizar descuento global
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                discount:
-                  type: number
-      responses:
-        "200":
-          description: Descuento actualizado
-
-  /settings/increase-prices:
-    put:
-      tags: [Configuración]
-      summary: Aumentar precios de todos los productos
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                percentage:
-                  type: number
-      responses:
-        "200":
-          description: Precios actualizados
-
-  /admin/login:
-    post:
-      tags: [Administración]
-      summary: Iniciar sesión
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-      responses:
-        "200":
-          description: Sesión iniciada
-        "401":
-          description: Credenciales inválidas
-
-  /admin/logout:
-    post:
-      tags: [Administración]
-      summary: Cerrar sesión
-      responses:
-        "200":
-          description: Sesión finalizada
+              example:
+                _id: "64f2f3abc123"
+                status: "approved"
 
 components:
   schemas:
@@ -394,6 +265,7 @@ components:
         updatedAt:
           type: string
           format: date-time
+
     Sale:
       type: object
       properties:
@@ -447,13 +319,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-    Settings:
-      type: object
-      properties:
-        discount:
-          type: number
-        priceIncrease:
-          type: number
 
   securitySchemes:
     AdminAuth:
