@@ -1,4 +1,4 @@
-# API E-commerce - Cristian Developer
+# API E-commerce - CodeStack
 
 ![Node.js](https://img.shields.io/badge/Node.js-14.x-green)
 ![Express](https://img.shields.io/badge/Express-4.x-lightgrey)
@@ -68,6 +68,7 @@ JWT_SECRET=<jwt_secret>
 
 ```bash
 npm start
+npm run dev → Nodemon
 ```
 
 ## Endpoints Principales
