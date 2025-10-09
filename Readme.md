@@ -36,7 +36,7 @@ Permite:
 1. Clonar el repositorio:
 
 ```bash
-git clone https://github.com/tu-usuario/api-ecommerce.git
+git clone https://github.com/CodeStack-dev25/ecommerce-api.git
 cd api-ecommerce
 ```
 
