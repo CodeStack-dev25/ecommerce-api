@@ -1,4 +1,3 @@
-  GNU nano 7.2                                                      products.routes.js                                                                
 import Router from "express";
 import multer from "multer";
 import ProductsController from "./products.controller.js";
