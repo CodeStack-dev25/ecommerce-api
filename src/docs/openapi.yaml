@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: API E-commerce - Cristian Developer
+  title: API E-commerce - CodeStack
   version: 1.2.0
   description: >
     API E-commerce para la gestión integral de productos, pedidos, clientes y configuraciones.  
