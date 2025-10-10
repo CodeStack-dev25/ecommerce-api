@@ -46,9 +46,7 @@ app.use(indexRouter);
 app.use("/docs", express.static(__dirname + "/docs"));
 
 app.get("/", (req, res) => {
-  const host = req.headers.host;
-  const protocol = req.protocol;
-  const specUrl = `${protocol}://${host}/docs/openapi.yaml`;
+  const specUrl = `https://aerotactico.cristiandeveloper.site/docs/openapi.yaml`;
 
   console.log(specUrl);
 
