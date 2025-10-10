@@ -1,15 +1,29 @@
+  GNU nano 7.2                                                      products.routes.js                                                                
 import Router from "express";
-import ProductsController from "./products.controller.js";
 import multer from "multer";
+import ProductsController from "./products.controller.js";
 
 const productRouter = Router();
 
-const upload = multer({ dest: "uploads/" });
+// Configuración de almacenamiento y límites
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB por archivo
+  },
+});
 
 productRouter.get("/", ProductsController.listProducts);
 productRouter.get("/:pid", ProductsController.getProduct);
-productRouter.post("/", upload.array("thumbnails"), ProductsController.createProduct);
-productRouter.put("/:pid", upload.array("thumbnails"), ProductsController.updateProduct);
+
+// Carga de múltiples imágenes (máximo 10 archivos, por ejemplo)
+productRouter.post("/", upload.array("thumbnails", 10), ProductsController.createProduct);
+productRouter.put("/:pid", upload.array("thumbnails", 10), ProductsController.updateProduct);
 productRouter.delete("/:pid", ProductsController.deleteProduct);
 
 export default productRouter;
