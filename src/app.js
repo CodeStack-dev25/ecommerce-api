@@ -9,9 +9,6 @@ import bodyParser from "body-parser";
 import { __dirname } from "./path.js";
 import { addLogger, appLogger } from "./utils/logger.js";
 import MongoSingleton from "./config/db.js";
-import path from "path"; // 👈 agregado
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUiExpress from "swagger-ui-express";
 
 const app = express();
 
