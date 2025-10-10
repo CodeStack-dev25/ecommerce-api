@@ -30,6 +30,132 @@ tags:
     description: Endpoints de autenticación y gestión de sesión
 
 paths:
+  # ----------------------- PRODUCTOS -----------------------
+  /products:
+    get:
+      tags: [Productos]
+      summary: Listar todos los productos
+      responses:
+        "200":
+          description: Lista de productos obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      tags: [Productos]
+      summary: Crear un nuevo producto
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                subCategory:
+                  type: string
+                price:
+                  type: number
+                variants:
+                  type: string
+                  description: JSON con variantes (color, talla, stock)
+                thumbnails:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "201":
+          description: Producto creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+  /products/{pid}:
+    get:
+      tags: [Productos]
+      summary: Obtener producto por ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    put:
+      tags: [Productos]
+      summary: Actualizar producto por ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                subCategory:
+                  type: string
+                price:
+                  type: number
+                variants:
+                  type: string
+                  description: JSON con variantes (color, talla, stock)
+                thumbnails:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "200":
+          description: Producto actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    delete:
+      tags: [Productos]
+      summary: Eliminar producto por ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto eliminado correctamente
+
+  # ----------------------- PAGOS -----------------------
   /pay/createSale:
     post:
       tags: [Pagos]
@@ -43,45 +169,22 @@ paths:
               properties:
                 user:
                   type: object
-                  description: Datos del cliente
                   properties:
-                    name:
-                      type: string
-                    email:
-                      type: string
-                    phone:
-                      type: string
-                    address:
-                      type: string
-                    city:
-                      type: string
-                    postalCode:
-                      type: string
-                  example:
-                    name: "Cristian Fernández"
-                    email: "cristian@example.com"
-                    phone: "123456789"
-                    address: "Calle Falsa 123"
-                    city: "Tandil"
-                    postalCode: "7000"
+                    name: { type: string }
+                    email: { type: string }
+                    phone: { type: string }
+                    address: { type: string }
+                    city: { type: string }
+                    postalCode: { type: string }
                 items:
                   type: array
                   items:
                     type: object
                     properties:
-                      productId:
-                        type: string
-                      title:
-                        type: string
-                      price:
-                        type: number
-                      quantity:
-                        type: number
-                    example:
-                      productId: "6705bdf8c3e64a2bfb8dcf10"
-                      title: "Zapatillas Air Force 1"
-                      price: 149.99
-                      quantity: 2
+                      productId: { type: string }
+                      title: { type: string }
+                      price: { type: number }
+                      quantity: { type: number }
       responses:
         "201":
           description: Venta creada correctamente
@@ -89,29 +192,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Sale"
-              example:
-                _id: "64f2f3abc123"
-                user:
-                  name: "Cristian Fernández"
-                  email: "cristian@example.com"
-                  phone: "123456789"
-                  address: "Calle Falsa 123"
-                  city: "Tandil"
-                  postalCode: "7000"
-                items:
-                  - productId: "6705bdf8c3e64a2bfb8dcf10"
-                    title: "Zapatillas Air Force 1"
-                    price: 149.99
-                    quantity: 2
-                    color: "Blanco"
-                    size: "42"
-                    category: "Calzado"
-                total: 299.98
-                status: "pending"
-                preferenceId: "1234567890"
-                comprobanteUrl: null
-                createdAt: "2025-10-09T10:00:00Z"
-                updatedAt: "2025-10-09T10:00:00Z"
 
   /pay/webhook:
     post:
@@ -145,11 +225,9 @@ paths:
                 user:
                   type: string
                   description: JSON del usuario
-                  example: '{"name":"Cristian Fernández","email":"cristian@example.com"}'
                 items:
                   type: string
                   description: JSON con los items de la venta
-                  example: '[{"productId":"6705bdf8c3e64a2bfb8dcf10","title":"Zapatillas Air Force 1","price":149.99,"quantity":2}]'
                 receipt:
                   type: string
                   format: binary
@@ -174,29 +252,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Sale"
-              example:
-                - _id: "64f2f3abc123"
-                  user:
-                    name: "Cristian Fernández"
-                    email: "cristian@example.com"
-                    phone: "123456789"
-                    address: "Calle Falsa 123"
-                    city: "Tandil"
-                    postalCode: "7000"
-                  items:
-                    - productId: "6705bdf8c3e64a2bfb8dcf10"
-                      title: "Zapatillas Air Force 1"
-                      price: 149.99
-                      quantity: 2
-                      color: "Blanco"
-                      size: "42"
-                      category: "Calzado"
-                  total: 299.98
-                  status: "pending"
-                  preferenceId: "1234567890"
-                  comprobanteUrl: null
-                  createdAt: "2025-10-09T10:00:00Z"
-                  updatedAt: "2025-10-09T10:00:00Z"
 
   /pay/{tid}:
     put:
@@ -206,9 +261,7 @@ paths:
         - name: tid
           in: path
           required: true
-          schema:
-            type: string
-          example: "64f2f3abc123"
+          schema: { type: string }
       responses:
         "201":
           description: Estado actualizado
@@ -216,109 +269,147 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Sale"
-              example:
-                _id: "64f2f3abc123"
-                status: "approved"
+
+  # ----------------------- CONFIGURACIÓN -----------------------
+  /settings:
+    get:
+      tags: [Configuración]
+      summary: Obtener configuración actual
+      responses:
+        "200":
+          description: Configuración obtenida correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
+
+  /settings/discount:
+    put:
+      tags: [Configuración]
+      summary: Actualizar descuento global
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                discount: { type: number }
+      responses:
+        "200":
+          description: Descuento actualizado correctamente
+
+  /settings/increase-prices:
+    put:
+      tags: [Configuración]
+      summary: Aumentar precios de todos los productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                percentage: { type: number }
+      responses:
+        "200":
+          description: Precios actualizados correctamente
+
+  # ----------------------- ADMINISTRACIÓN -----------------------
+  /admin/login:
+    post:
+      tags: [Administración]
+      summary: Iniciar sesión como administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username: { type: string }
+                password: { type: string }
+      responses:
+        "200":
+          description: Sesión iniciada correctamente
+        "401":
+          description: Credenciales inválidas
+
+  /admin/logout:
+    post:
+      tags: [Administración]
+      summary: Cerrar sesión
+      responses:
+        "200":
+          description: Sesión finalizada correctamente
 
 components:
   schemas:
     Product:
       type: object
       properties:
-        _id:
-          type: string
-        brand:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        price:
-          type: number
-        category:
-          type: string
-        subCategory:
-          type: string
+        _id: { type: string }
+        brand: { type: string }
+        title: { type: string }
+        description: { type: string }
+        price: { type: number }
+        category: { type: string }
+        subCategory: { type: string }
         thumbnails:
           type: array
           items:
             type: object
             properties:
-              url:
-                type: string
-              public_id:
-                type: string
+              url: { type: string }
+              public_id: { type: string }
         variants:
           type: array
           items:
             type: object
             properties:
-              color:
-                type: string
-              size:
-                type: string
-              stock:
-                type: number
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+              color: { type: string }
+              size: { type: string }
+              stock: { type: number }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
 
     Sale:
       type: object
       properties:
-        _id:
-          type: string
+        _id: { type: string }
         user:
           type: object
           properties:
-            name:
-              type: string
-            email:
-              type: string
-            phone:
-              type: string
-            address:
-              type: string
-            city:
-              type: string
-            postalCode:
-              type: string
+            name: { type: string }
+            email: { type: string }
+            phone: { type: string }
+            address: { type: string }
+            city: { type: string }
+            postalCode: { type: string }
         items:
           type: array
           items:
             type: object
             properties:
-              productId:
-                type: string
-              title:
-                type: string
-              price:
-                type: number
-              quantity:
-                type: number
-              color:
-                type: string
-              size:
-                type: string
-              category:
-                type: string
-        total:
-          type: number
-        status:
-          type: string
-        preferenceId:
-          type: string
-        comprobanteUrl:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+              productId: { type: string }
+              title: { type: string }
+              price: { type: number }
+              quantity: { type: number }
+              color: { type: string }
+              size: { type: string }
+              category: { type: string }
+        total: { type: number }
+        status: { type: string }
+        preferenceId: { type: string }
+        comprobanteUrl: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    Settings:
+      type: object
+      properties:
+        discount: { type: number }
+        priceIncrease: { type: number }
 
   securitySchemes:
     AdminAuth:
