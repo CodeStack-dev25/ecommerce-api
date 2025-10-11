@@ -119,7 +119,7 @@ RapiDoc (modo lectura):
 Abrir en el navegador: http://localhost:4000/
 
 Archivo OpenAPI / Swagger:
-http://localhost:4000/docs/openapi.json
+http://localhost:4000/docs/openapi.yaml
 
 La documentación está unificada para todos los módulos y evita errores de referencia.
 
