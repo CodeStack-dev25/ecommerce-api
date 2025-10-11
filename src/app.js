@@ -77,7 +77,8 @@ app.get("/", (req, res) => {
           theme="light"
           show-header="false"
           render-style="read"
-
+          allow-try="false"       
+          allow-authentication="false"
         >
         </rapi-doc>
 
