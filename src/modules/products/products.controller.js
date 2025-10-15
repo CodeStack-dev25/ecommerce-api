@@ -1,7 +1,7 @@
 import ProductService from "./products.service.js";
 import { appLogger } from "../../utils/logger.js";
 import cloudinary from "../../config/cloudinary.js";
-import { mapProduct } from "../../utils/helpers.js";
+import { controllerString, mapProduct } from "../../utils/helpers.js";
 
 class ProductController {
   // Listar todos los productos
@@ -55,7 +55,7 @@ class ProductController {
       const productData = req.body;
       if (!productData) return res.status(400).json({ error: "No se recibió el producto" });
 
-      const { brand = "", title, description = "", category, subCategory = "", price, variants = [] } = productData;
+      const { brand = "", title = "", description = "", category = "", subCategory = "", price, variants = [] } = productData;
 
       if (!title || !price || !category) {
         return res.status(400).json({ error: "Faltan campos obligatorios" });
@@ -83,20 +83,20 @@ class ProductController {
         ? parsedVariants.flatMap(
             (v) =>
               v.sizes?.map((s) => ({
-                color: v.name,
-                size: s.name,
+                color: v.name.toUpperCase(),
+                size: s.name.toUpperCase(),
                 stock: s.stock ?? 0,
               })) || [],
           )
         : [];
 
       const createdProduct = await ProductService.createProduct({
-        brand,
-        title,
+        brand: brand.toUpperCase(),
+        title: title.toUpperCase(),
         description,
         price,
-        category,
-        subCategory,
+        category: controllerString(category),
+        subCategory: controllerString(subCategory),
         thumbnails,
         variants: flatVariants,
       });
@@ -133,7 +133,7 @@ class ProductController {
         const mergedVariants = [];
 
         variants.forEach((variant) => {
-          const { name, rgb, sizes } = variant;
+          const { name, sizes } = variant;
 
           if (!sizes || !Array.isArray(sizes)) return;
 
@@ -146,8 +146,8 @@ class ProductController {
               mergedVariants[index].stock += s.stock;
             } else {
               mergedVariants.push({
-                color: name,
-                size: s.name,
+                color: controllerString(name),
+                size: controllerString(s.name),
                 stock: s.stock ?? 0,
               });
             }

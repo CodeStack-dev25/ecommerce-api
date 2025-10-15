@@ -3,6 +3,7 @@ export const colorMap = {
   negro: "#333333",
   rojo: "#E57373",
   verde: "#388E3C",
+  "verde petroleo": "#397C5D",
   azul: "#64B5F6",
   amarillo: "#FFF176",
   naranja: "#FFB74D",
@@ -17,7 +18,7 @@ export const colorMap = {
   lila: "#CE93D8",
   oliva: "#9E9D24",
   cian: "#4DD0E1",
-  magenta: "#F06292",
+  beige: "#F5F5DC",
   granate: "#A05252",
   mostaza: "#FFD54F",
   coral: "#FF8A65",
@@ -27,4 +28,5 @@ export const colorMap = {
   perla: "#E0E0E0",
   cobre: "#BCAAA4",
   plata: "#B0BEC5",
+  uca: "linear-gradient(90deg,rgba(64, 156, 61, 1) 31%, rgba(176, 110, 60, 1) 31%, rgba(176, 110, 60, 1) 65%, rgba(255, 223, 128, 1) 65%)",
 };

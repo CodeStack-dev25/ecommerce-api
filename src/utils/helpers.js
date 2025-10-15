@@ -31,3 +31,11 @@ export const mapProduct = (product) => {
     variants: colors,
   };
 };
+
+export const controllerString = (str) => {
+  let newStr = str.split(" ");
+  if (newStr.length >= 1) {
+    newStr = newStr.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+  }
+  return newStr;
+};

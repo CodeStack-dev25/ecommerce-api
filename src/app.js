@@ -48,8 +48,6 @@ app.use("/docs", express.static(__dirname + "/docs"));
 app.get("/", (req, res) => {
   const specUrl = `https://aerotactico.cristiandeveloper.site/docs/openapi.yaml`;
 
-  console.log(specUrl);
-
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -77,7 +75,7 @@ app.get("/", (req, res) => {
           theme="light"
           show-header="false"
           render-style="read"
-          allow-try="false"       
+           allow-try="false"       
           allow-authentication="false"
         >
         </rapi-doc>

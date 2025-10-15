@@ -1,4 +1,5 @@
 import ProductRepository from "./repositories/products.repository.js";
+import { appLogger } from "../../utils/logger.js";
 import fs from "fs";
 
 class ProductService {
@@ -38,34 +39,34 @@ class ProductService {
   async updateStock(order) {
     try {
       if (!order.items || !Array.isArray(order.items)) {
-        throw new Error("El pedido no contiene items válidos");
+        appLogger.error("El pedido no contiene items válidos");
       }
 
       for (const item of order.items) {
         const prod = await this.getProduct(item.productId);
 
         if (!prod) {
-          throw new Error(`Producto ${item.productId} no encontrado`);
+          appLogger.error(`Producto ${item.productId} no encontrado`);
         }
 
         const variant = prod.variants.find((v) => v.color === item.color && v.size === item.size);
 
         if (!variant) {
-          throw new Error(`Variante no encontrada en producto ${prod.title} (${item.color} - ${item.size})`);
+          appLogger.error(`Variante no encontrada en producto ${prod.title} (${item.color} - ${item.size})`);
         }
 
         if (variant.stock < item.quantity) {
-          throw new Error(`Stock insuficiente para ${prod.title} (${item.color} - ${item.size})`);
+          appLogger.error(`Stock insuficiente para ${prod.title} (${item.color} - ${item.size})`);
         }
 
         variant.stock -= item.quantity;
 
         await prod.save();
       }
-
+      appLogger.info("Stock actualizado correctamente");
       return { success: true };
     } catch (err) {
-      console.error("Error en updateStock:", err.message);
+      appLogger.error("Error en updateStock:", err.message);
       throw err;
     }
   }
