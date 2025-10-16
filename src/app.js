@@ -15,7 +15,7 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["https://aerotactico-tandil.shop", "https://www.aerotactico-tandil.shop", "http://localhost:4000"],
+    origin: ["https://aerotactico-tandil.shop", "https://www.aerotactico-tandil.shop", "http://localhost:5173"],
     credentials: true,
   }),
 );

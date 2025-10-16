@@ -28,5 +28,4 @@ export const colorMap = {
   perla: "#E0E0E0",
   cobre: "#BCAAA4",
   plata: "#B0BEC5",
-  uca: "linear-gradient(90deg,rgba(64, 156, 61, 1) 31%, rgba(176, 110, 60, 1) 31%, rgba(176, 110, 60, 1) 65%, rgba(255, 223, 128, 1) 65%)",
 };
