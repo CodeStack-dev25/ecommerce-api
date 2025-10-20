@@ -114,6 +114,7 @@ class ProductController {
     try {
       const { pid } = req.params;
 
+      // Buscar producto existente
       const existingProduct = await ProductService.getProduct(pid);
       if (!existingProduct) {
         return res.status(404).json({ error: "Producto no encontrado" });
@@ -121,6 +122,7 @@ class ProductController {
 
       let { variants = [], ...rest } = req.body;
 
+      // Parsear si viene como string (FormData)
       if (variants && typeof variants === "string") {
         try {
           variants = JSON.parse(variants);
@@ -129,46 +131,66 @@ class ProductController {
         }
       }
 
-      if (Array.isArray(variants)) {
-        const mergedVariants = [];
+      // Clonamos las variantes actuales
+      const currentVariants = [...(existingProduct.variants || [])];
+
+      if (Array.isArray(variants) && variants.length > 0) {
+        // 1️⃣ Normalizar y fusionar duplicados dentro del body
+        const normalizedVariants = [];
 
         variants.forEach((variant) => {
-          const { name, sizes } = variant;
-
-          if (!sizes || !Array.isArray(sizes)) return;
+          const color = variant.name?.trim().toUpperCase();
+          const sizes = Array.isArray(variant.sizes) ? variant.sizes : [];
 
           sizes.forEach((s) => {
-            if (!s.name) return;
+            const size = s.name?.trim().toUpperCase();
+            const stock = Number(s.stock) || 0;
 
-            const index = mergedVariants.findIndex((ex) => ex.color === name && ex.size === s.name);
-
-            if (index >= 0) {
-              mergedVariants[index].stock += s.stock;
+            const idx = normalizedVariants.findIndex((v) => v.color === color && v.size === size);
+            if (idx >= 0) {
+              normalizedVariants[idx].stock += stock;
             } else {
-              mergedVariants.push({
-                color: controllerString(name),
-                size: controllerString(s.name),
-                stock: s.stock ?? 0,
-              });
+              normalizedVariants.push({ color, size, stock });
             }
           });
         });
 
-        existingProduct.variants = mergedVariants;
+        // 2️⃣ Procesar variantes fusionadas contra las existentes
+        normalizedVariants.forEach(({ color, size, stock }) => {
+          const existingIndex = currentVariants.findIndex((ex) => ex.color === color && ex.size === size);
+
+          if (existingIndex >= 0) {
+            const currentStock = currentVariants[existingIndex].stock || 0;
+            const newStock = stock < 0 ? 0 : stock;
+
+            console.log(`🟡 Actualizando ${color} ${size}: ${currentStock} → ${newStock}`);
+
+            currentVariants[existingIndex].stock = newStock;
+          } else if (stock > 0) {
+            console.log(`🟢 Creando nueva variante ${color} ${size} con stock ${stock}`);
+            currentVariants.push({ color, size, stock });
+          }
+        });
       }
 
+      // 3️⃣ Asignar variantes actualizadas
+      existingProduct.variants = currentVariants;
+
+      // 4️⃣ Actualizar otras propiedades solo si se enviaron
       Object.keys(rest).forEach((key) => {
         if (rest[key] !== undefined) {
           existingProduct[key] = rest[key];
         }
       });
 
-      const updatedProduct = await existingProduct.save();
-      appLogger.info("Producto actualizado correctamente");
+      // 5️⃣ Guardar cambios
+      const updatedProduct = await ProductService.updateProduct(pid, existingProduct);
+
+      appLogger.info("✅ Producto actualizado correctamente");
       return res.status(200).json(updatedProduct);
     } catch (err) {
       console.error(err);
-      appLogger.error("Error al actualizar producto", err);
+      appLogger.error("❌ Error al actualizar producto", err);
       return res.status(500).json({ error: "Error al actualizar el producto" });
     }
   }

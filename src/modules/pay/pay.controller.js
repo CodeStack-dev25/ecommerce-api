@@ -5,12 +5,13 @@ import env from "../../config/env.js";
 import ProductService from "../products/products.service.js";
 import cloudinary from "../../config/cloudinary.js";
 import { adminTicket, detailTicket, sendTicket } from "../../utils/mails.js";
-import Setting from "../settings/models/setting.model.js"
+import Setting from "../settings/models/setting.model.js";
+import { controllerString } from "../../utils/helpers.js";
 
 const mpClient = new MercadoPagoConfig({ accessToken: env.mpToken });
 
 class PayController {
-  // Crear una nueva orden 
+  // Crear una nueva orden
   async createSale(req, res) {
     try {
       const { user, items } = req.body;
@@ -38,7 +39,7 @@ class PayController {
             quantity: Number(i.quantity),
           })),
           payer: {
-            name: user.name,
+            name: controllerString(user.name),
             email: user.email,
             phone: { number: user.phone },
           },
@@ -55,11 +56,11 @@ class PayController {
       // Guardamos venta en DB respetando el schema
       const sale = await SalesService.createSale({
         user: {
-          name: parsedUser.name,
+          name: controllerString(parsedUser.name),
           email: parsedUser.email,
           phone: parsedUser.phone || "",
-          address: parsedUser.address || "",
-          city: parsedUser.city || "",
+          address: controllerString(parsedUser.address) || "",
+          city: controllerString(parsedUser.city) || "",
           postalCode: parsedUser.postalCode || "",
         },
         items: parsedItems.map((i) => ({
@@ -69,7 +70,7 @@ class PayController {
           price: i.price,
           color: i.color || "",
           size: i.size || "",
-          category: i.category
+          category: i.category,
         })),
         total: parsedItems.reduce((acc, i) => acc + Number(i.price) * Number(i.quantity), 0),
         preferenceId: mpResponse.id,
@@ -128,14 +129,14 @@ class PayController {
         comprobanteUrl = result.secure_url;
         await ProductService.deleteLocalFiles([req.file.path]);
       }
-    
+
       const sale = {
         user: {
-          name: parsedUser.name,
+          name: controllerString(parsedUser.name),
           email: parsedUser.email,
           phone: parsedUser.phone || "",
-          address: parsedUser.address || "",
-          city: parsedUser.city || "",
+          address: controllerString(parsedUser.address) || "",
+          city: controllerString(parsedUser.city) || "",
           postalCode: parsedUser.postalCode || "",
         },
         items: parsedItems.map((i) => ({
@@ -145,7 +146,7 @@ class PayController {
           price: i.price,
           color: i.color || "",
           size: i.size || "",
-          category: i.category
+          category: i.category,
         })),
         total: parsedItems.reduce((acc, i) => acc + Number(i.price) * Number(i.quantity), 0),
         status: "pending",
@@ -183,24 +184,23 @@ class PayController {
         ticket.status = "approved";
       }
 
-      const disc = await Setting.findOne()
-      
+      const disc = await Setting.findOne();
 
       await SalesService.updateSaleStatus(ticket._id, ticket);
-      
+
       let mode;
 
-      if(ticket.comprobanteUrl){
-        mode = 'Transferencia'
-      }else{
-        mode = 'Mercado Pago'
+      if (ticket.comprobanteUrl) {
+        mode = "Transferencia";
+      } else {
+        mode = "Mercado Pago";
       }
 
       await sendTicket(ticket, mode, disc.discount);
 
-      await detailTicket(ticket, mode, disc.discount)
+      await detailTicket(ticket, mode, disc.discount);
 
-      await adminTicket(ticket, mode, disc.discount)
+      await adminTicket(ticket, mode, disc.discount);
 
       await ProductService.updateStock(ticket);
 
